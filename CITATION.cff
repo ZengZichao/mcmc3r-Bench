@@ -1,0 +1,98 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "mcmc3r Bench: an independent bilingual GUI for mcmc3r"
+version: 0.1.0
+type: software
+authors:
+  - family-names: Zeng
+    given-names: Zichao
+    alias: 曾子超
+    orcid: "https://orcid.org/0000-0001-6553-970X"
+    email: zengzichao@sjtu.edu.cn
+repository-code: "https://github.com/ZengZichao/mcmc3r-Bench"
+license: MIT
+keywords:
+  - phylogenetics
+  - MCMCtree
+  - BPP
+  - divergence times
+  - marginal likelihood
+  - calibration density
+  - Shiny
+  - bilingual
+abstract: >-
+  mcmc3r Bench is an independent, unofficial bilingual Shiny GUI for the
+  mcmc3r R package. It wraps calibration-density exploration, MCMC output
+  summaries, and marginal-likelihood estimation with validation, light/dark
+  themes, English/Chinese text, and reproducible exports.
+references:
+  - type: software
+    title: "mcmc3r: Tools to work with MCMCtree and BPP"
+    authors:
+      - family-names: dos Reis
+        given-names: Mario
+      - family-names: Alvarez-Carretero
+        given-names: Sandra
+    version: 0.6.0
+    repository-code: "https://github.com/dosreislab/mcmc3r"
+    year: 2025
+  - type: article
+    title: "Bayesian Estimation of Species Divergence Times Under a Molecular Clock Using Multiple Fossil Calibrations with Soft Bounds"
+    authors:
+      - family-names: Yang
+        given-names: Ziheng
+      - family-names: Rannala
+        given-names: Bruce
+    journal: "Molecular Biology and Evolution"
+    volume: 23
+    pages: "212-226"
+    year: 2006
+    doi: "10.1093/molbev/msj024"
+  - type: article
+    title: "The Impact of the Representation of Fossil Calibrations on Bayesian Estimation of Species Divergence Times"
+    authors:
+      - family-names: Inoue
+        given-names: Jun
+      - family-names: Donoghue
+        given-names: Philip C. J.
+      - family-names: Yang
+        given-names: Ziheng
+    journal: "Systematic Biology"
+    volume: 59
+    pages: "74-89"
+    year: 2010
+    doi: "10.1093/sysbio/syp078"
+  - type: article
+    title: "Using Phylogenomic Data to Explore the Effects of Relaxed Clocks and Calibration Strategies on Divergence Time Estimation: Primates as a Test Case"
+    authors:
+      - family-names: dos Reis
+        given-names: Mario
+      - family-names: Gunnarsson
+        given-names: Asa
+      - family-names: Thawornwattana
+        given-names: Yuttapong
+      - family-names: Angelis
+        given-names: Konstantinos
+      - family-names: Tiley
+        given-names: George P.
+      - family-names: Donoghue
+        given-names: Philip C. J.
+      - family-names: Yang
+        given-names: Ziheng
+    journal: "Systematic Biology"
+    volume: 67
+    pages: "594-615"
+    year: 2018
+    doi: "10.1093/sysbio/syy001"
+  - type: article
+    title: "Efficient Bayesian Species Tree Inference under the Multispecies Coalescent"
+    authors:
+      - family-names: Rannala
+        given-names: Bruce
+      - family-names: Yang
+        given-names: Ziheng
+    journal: "Systematic Biology"
+    volume: 66
+    pages: "823-842"
+    year: 2017
+    doi: "10.1093/sysbio/syw119"

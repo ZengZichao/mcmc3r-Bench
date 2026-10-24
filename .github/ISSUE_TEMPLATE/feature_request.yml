@@ -1,0 +1,50 @@
+name: Feature request / 功能建议
+description: Suggest a feature or improvement / 提出功能或改进建议
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        mcmc3r Bench is an unofficial GUI for the mcmc3r R package. It does
+        not run MCMCtree/BPP or execute arbitrary R code.
+        mcmc3r Bench 是 mcmc3r R 包的非官方图形界面；它不运行 MCMCtree/BPP，
+        也不执行任意 R 代码。
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case / 问题或使用场景
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution / 建议方案
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area / 领域
+      options:
+        - Calibration Explorer / 校准分布探索
+        - MCMC Summary / MCMC 汇总
+        - Marginal Likelihood / 边际似然
+        - i18n / 国际化
+        - Theme / accessibility / 主题与可访问性
+        - Documentation / 文档
+        - Deployment / 部署
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered / 考虑过的替代方案
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check / 范围检查
+      options:
+        - label: This does not require running MCMCtree/BPP inside the app. / 不需要在应用内运行 MCMCtree/BPP。
+        - label: This does not require executing user-supplied R code. / 不需要执行用户提供的 R 代码。
+        - label: This can work within the Connect Cloud Free plan limits. / 可在 Connect Cloud 免费套餐限制内实现。

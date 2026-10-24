@@ -1,0 +1,15 @@
+.Rlib/
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+renv/library/
+renv/staging/
+renv/sandbox/
+*.log
+*.Rout
+.DS_Store
+.httr-oauth
+rsconnect/
+manifest.json
+docs/assets/screenshots/**/*.tmp.png

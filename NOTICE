@@ -1,0 +1,19 @@
+mcmc3r Bench
+Copyright (c) 2026 Zeng Zichao (曾子超)
+
+This software is an independent, unofficial GUI built on the mcmc3r R package.
+mcmc3r is Copyright (c) 2017 Mario dos Reis, licensed under the MIT License.
+mcmc3r is maintained by Mario dos Reis and Sandra Alvarez-Carretero.
+This project is not affiliated with or endorsed by the mcmc3r authors,
+MCMCtree, or BPP.
+
+The upstream MIT license text is reproduced in THIRD_PARTY_LICENSES.md.
+Original documentation in this repository is licensed under CC BY 4.0
+(see docs/LICENSE).
+Code in this repository is licensed under the MIT License (see LICENSE).
+
+Chinese summary:
+本项目是 mcmc3r R 包的独立、非官方图形界面。mcmc3r 由 Mario dos Reis 与
+Sandra Alvarez-Carretero 等作者维护，采用 MIT 许可，版权归 Mario dos Reis
+（2017）。本项目与上游作者、MCMCtree、BPP 无隶属或背书关系。本项目代码采用
+MIT 许可，原创文档采用 CC BY 4.0，随包字体采用 OFL-1.1。

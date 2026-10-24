@@ -1,0 +1,62 @@
+name: Bug report / 缺陷报告
+description: Report a reproducible problem with mcmc3r Bench / 报告可复现的问题
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not attach confidential, personal, or regulated data. Use a minimal
+        synthetic example if possible. For security issues, follow SECURITY.md.
+        请勿附上机密、个人或受监管数据；尽量使用最小合成示例。安全问题请遵循
+        SECURITY.md。
+  - type: input
+    id: version
+    attributes:
+      label: App version / 应用版本
+      description: Shown in the footer and About page. / 页脚与“关于”页可见。
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module / 模块
+      options:
+        - Calibration Explorer / 校准分布探索
+        - MCMC Summary / MCMC 汇总
+        - Marginal Likelihood / 边际似然
+        - Help / About / 帮助与关于
+        - Language or theme / 语言或主题
+        - Deployment / 部署
+    validations:
+      required: true
+  - type: input
+    id: error_code
+    attributes:
+      label: Error code (if any) / 错误码（如有）
+      placeholder: "MCMC-003"
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce / 复现步骤
+      description: Include parameters, file structure, language, theme, and browser. / 请包含参数、文件结构、语言、主题与浏览器。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour / 期望行为
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour / 实际行为
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Copied diagnostics / 复制的诊断信息
+      description: Use the Copy diagnostics button; it contains no file contents. / 使用“复制诊断信息”按钮；其中不含文件内容。

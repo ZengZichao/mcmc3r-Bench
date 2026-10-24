@@ -1,0 +1,74 @@
+/* Print stylesheet: hide navigation and controls, keep results readable. */
+
+@media print {
+  :root {
+    --bg: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-2: #F4F6F8;
+    --text: #10243E;
+    --text-muted: #48617A;
+    --border: #C9D4DF;
+    --plot-bg: #FFFFFF;
+    --plot-fg: #10243E;
+    --plot-grid: #DCE4EC;
+    --code-bg: #F4F6F8;
+    --code-fg: #10243E;
+  }
+
+  body {
+    background: #FFFFFF !important;
+    color: #10243E !important;
+    font-size: 11pt;
+  }
+
+  .app-header,
+  .public-notice,
+  .app-footer,
+  .control-panel,
+  .page-header-icon,
+  .result-toolbar,
+  .toast-region,
+  .skip-link,
+  .download-group,
+  .export-controls,
+  .copy-btn,
+  .btn,
+  .shiny-notification {
+    display: none !important;
+  }
+
+  .app-main {
+    max-width: none;
+    padding: 0;
+  }
+
+  .page-section[hidden] {
+    display: none !important;
+  }
+
+  .workbench-grid {
+    display: block;
+  }
+
+  .result-card,
+  .card-block,
+  .prose-card {
+    box-shadow: none !important;
+    border: 1px solid #C9D4DF !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .page-title {
+    font-size: 18pt;
+  }
+
+  a {
+    color: #10243E !important;
+    text-decoration: underline;
+  }
+
+  .dataTables_scrollBody {
+    max-height: none !important;
+  }
+}

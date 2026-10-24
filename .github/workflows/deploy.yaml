@@ -1,0 +1,33 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: connect-cloud-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "4.6.1"
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-renv@v2
+      - name: Restore dependencies
+        run: Rscript -e 'renv::restore()'
+      - name: Install rsconnect
+        run: Rscript -e 'install.packages("rsconnect")'
+      - name: Deploy to Posit Connect Cloud
+        env:
+          CONNECT_CLOUD_CLIENT_ID: ${{ secrets.CONNECT_CLOUD_CLIENT_ID }}
+          CONNECT_CLOUD_CLIENT_SECRET: ${{ secrets.CONNECT_CLOUD_CLIENT_SECRET }}
+          CONNECT_CLOUD_ACCOUNT: ${{ secrets.CONNECT_CLOUD_ACCOUNT }}
+        run: Rscript dev/deploy.R
