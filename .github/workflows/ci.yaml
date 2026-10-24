@@ -43,7 +43,7 @@ jobs:
       - name: Release consistency
         run: Rscript dev/check_release.R
       - name: Install Chrome
-        uses: r-lib/actions/setup-chrome@v1
+        uses: r-lib/actions/setup-chrome@v2
       - name: End-to-end tests
         run: Rscript tests/shinytest2/run-tests.R
       - name: Upload failure logs
