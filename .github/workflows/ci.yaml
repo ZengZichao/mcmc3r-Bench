@@ -42,9 +42,8 @@ jobs:
         run: Rscript dev/docs_check.R
       - name: Release consistency
         run: Rscript dev/check_release.R
-      - name: Install Chrome
-        uses: r-lib/actions/setup-chrome@v1
       - name: End-to-end tests
+        # Google Chrome is preinstalled on ubuntu-latest and discovered by chromote.
         run: Rscript tests/shinytest2/run-tests.R
       - name: Upload failure logs
         if: failure()
