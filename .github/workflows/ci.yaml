@@ -21,9 +21,11 @@ jobs:
         with:
           r-version: "4.6.1"
           use-public-rspm: true
+      - name: Preinstall mcmc3r dependencies
+        # renv installs the GitHub package in parallel; these must already be
+        # visible in .libPaths() for R CMD INSTALL to resolve Depends.
+        run: Rscript -e 'install.packages(c("ape", "coda", "corpcor"))'
       - uses: r-lib/actions/setup-renv@v2
-      - name: Restore dependencies
-        run: Rscript -e 'renv::restore()'
       - name: Lint R sources
         run: |
           install.packages("lintr")
