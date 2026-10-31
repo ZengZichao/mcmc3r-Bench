@@ -1,6 +1,9 @@
 #!/usr/bin/env Rscript
 # Verify English/Chinese documentation parity, metadata, links, and versions.
 
+if (!requireNamespace("digest", quietly = TRUE)) {
+  stop("digest is required to check screenshots.")
+}
 args <- commandArgs(trailingOnly = FALSE)
 file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
 root <- if (length(file_arg)) dirname(dirname(normalizePath(file_arg))) else normalizePath(".")
@@ -120,10 +123,31 @@ screenshots <- c(
   "zh-light/desktop.png", "zh-light/mobile.png",
   "zh-dark/desktop.png", "zh-dark/mobile.png"
 )
+# Existence alone let eight Chrome "connection refused" pages ship as README
+# artwork. Check the captures actually differ and look like the app.
+shot_digests <- character(0)
 for (shot in screenshots) {
   path <- file.path(root, "docs", "assets", "screenshots", shot)
-  add(file.exists(path), paste0("missing screenshot: ", shot))
+  if (!file.exists(path)) {
+    add(FALSE, paste0("missing screenshot: ", shot))
+    next
+  }
+  add(file.size(path) > 20000,
+      paste0("screenshot too small to be the app: ", shot, " (",
+             file.size(path), " bytes)"))
+  raw <- readBin(path, what = "raw", n = file.size(path))
+  bytes <- as.integer(raw)
+  dark <- sum(bytes > 0 & bytes < 90) / length(bytes)
+  add(dark >= 0.02,
+      paste0("screenshot has no dark UI pixels, likely a blank or browser ",
+             "error page: ", shot))
+  shot_digests[[shot]] <- digest::digest(raw, algo = "sha1",
+                                         serialize = FALSE)
 }
+dup <- shot_digests[duplicated(shot_digests)]
+add(length(dup) == 0,
+    paste0("identical screenshots, the capture matrix did not vary: ",
+           paste(names(dup), collapse = ", ")))
 
 add(file.exists(file.path(root, "docs", "TRANSLATION_STATUS.md")),
     "missing docs/TRANSLATION_STATUS.md")

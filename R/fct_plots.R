@@ -139,14 +139,43 @@ draw_calibration <- function(result, lang = "en", theme = "light",
   }
 
   if (isTRUE(quantile_note) && nrow(result$quantiles)) {
-    for (i in seq_len(nrow(result$quantiles))) {
-      graphics::abline(v = result$quantiles$quantile[i],
-                       col = colors$accent, lty = 3, lwd = 1.2)
+    probs <- result$quantiles$probability
+    qs <- result$quantiles$quantile
+    labels <- paste0(
+      formatC(probs * 100, format = "fg", digits = 3, drop0trailing = TRUE), "%"
+    )
+    for (q in qs) {
+      graphics::abline(v = q, col = colors$accent, lty = 3, lwd = 1.2)
+    }
+    # The default quantiles sit close together on a wide time axis, so two
+    # labels can be wider than the gap between their lines and collide even
+    # when they alternate rows. Measure each label and push neighbours apart.
+    xlim <- graphics::par("usr")[1:2]
+    half <- vapply(labels, function(lab)
+      graphics::strwidth(lab, cex = 0.62, units = "user") / 2, numeric(1))
+    gap <- half[1] * 0.25 + diff(xlim) * 0.002
+    placed <- sort.int(qs, index.return = TRUE)$x
+    order <- order(qs)
+    for (k in seq_along(placed)[-1]) {
+      i <- order[k]
+      prev <- order[k - 1]
+      need <- half[prev] + half[i] + gap
+      if (placed[k] - placed[k - 1] < need) placed[k] <- placed[k - 1] + need
+    }
+    for (k in rev(seq_along(placed))[-1]) {
+      i <- order[k]
+      nxt <- order[k + 1]
+      need <- half[i] + half[nxt] + gap
+      if (placed[k + 1] - placed[k] < need) placed[k] <- placed[k + 1] - need
+    }
+    placed <- pmin(pmax(placed, xlim[1] + half[order]), xlim[2] - half[order])
+    # Anchor labels to their own line unless nudging would run out of plot.
+    for (k in seq_along(placed)) {
+      i <- order[k]
+      at <- if (abs(placed[k] - qs[i]) <= half[i] * 2.5) placed[k] else qs[i]
       graphics::mtext(
-        paste0(formatC(result$quantiles$probability[i] * 100, format = "fg",
-                       digits = 3, drop0trailing = TRUE), "%"),
-        side = 3, at = result$quantiles$quantile[i],
-        line = -1.3 - ((i - 1) %% 2) * 0.9, cex = 0.62, col = colors$accent
+        labels[i], side = 3, at = at,
+        line = -1.3 - ((i - 1) %% 2) * 1.15, cex = 0.62, col = colors$accent
       )
     }
   }
