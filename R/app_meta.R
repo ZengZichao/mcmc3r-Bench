@@ -4,7 +4,6 @@
 # repository root. The constants below are checked by dev/check_release.R.
 
 APP_NAME <- "mcmc3r Bench"
-APP_NAME_ZH <- "mcmc3r \u5b9f\u9a8c\u53f0"
 APP_VERSION <- "0.1.0"
 APP_BUILD_DATE <- "2026-10-24"
 APP_AUTHOR <- "Zeng Zichao (\u66fe\u5b50\u8d85)"
@@ -62,10 +61,9 @@ upstream_remote_sha <- function() {
   UPSTREAM_SHA
 }
 
+# The title comes from the translation table. It used to be assembled here from
+# APP_NAME_ZH, a second copy of the app name that had drifted to a Japanese
+# variant of 实 (U+5B9F) instead of the simplified Chinese U+5B9E.
 app_title <- function(lang = "en") {
-  if (identical(normalize_lang(lang), "zh")) {
-    paste0(APP_NAME, " \u2014 ", APP_NAME_ZH)
-  } else {
-    paste0(APP_NAME, " \u2014 an unofficial bilingual GUI for mcmc3r")
-  }
+  tr("app.title", lang)
 }

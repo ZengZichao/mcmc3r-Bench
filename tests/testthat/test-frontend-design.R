@@ -216,3 +216,49 @@ test_that("the !important budget does not regress", {
   n <- length(regmatches(css, gregexpr("!important", css))[[1]])
   expect_lte(n, ceiling)
 })
+
+# K6: no CJK copy invented in R source. UI strings live in translations.csv.
+# APP_NAME_ZH used to be a second copy of the app name, written with \u escapes
+# so a plain grep for Chinese characters could not see it, and it had drifted to
+# the Japanese variant 实 -> U+5B9F instead of the simplified U+5B9E, which then
+# shipped in the page <title>. Every \u escape in R source is decoded here and
+# must resolve to text the translation table already knows.
+test_that("unicode escapes in R sources resolve to translated text", {
+  root <- testthat::test_path(".", "..", "..")
+  rows <- read.csv(file.path(root, "i18n", "translations.csv"),
+                   stringsAsFactors = FALSE, encoding = "UTF-8",
+                   check.names = FALSE)
+  known <- paste(rows$en, rows$zh, collapse = "\n")
+  # Proper nouns and language names, shown in their own script by design.
+  allow <- c("\u66fe\u5b50\u8d85", "\u4e2d\u6587")
+  # Typography, not copy.
+  benign <- c("\u2014", "\u2013", "\u2018", "\u2019", "\u201c", "\u201d",
+              "\u2026", "\u00b7", "\u203a", "\u00d7", "\u2192", "\u2264",
+              "\u2265", "\u2260", "\u00e5")
+
+  offenders <- character(0)
+  for (f in list.files(file.path(root, "R"), full.names = TRUE,
+                       pattern = "[.]R$")) {
+    lines <- readLines(f, encoding = "UTF-8", warn = FALSE)
+    for (i in seq_along(lines)) {
+      code <- sub("#.*$", "", lines[[i]])
+      runs <- regmatches(code,
+              gregexpr("(\\\\u[0-9a-fA-F]{4})+", code))[[1]]
+      for (run in runs) {
+        decoded <- tryCatch(
+          eval(parse(text = paste0("\"", run, "\""))),
+          error = function(e) NA_character_)
+        if (is.na(decoded) || !nzchar(decoded)) next
+        if (decoded %in% benign || decoded %in% allow) next
+        # ASCII-only escapes are formatting, not copy.
+        if (!grepl("[^\x01-\x7f]", decoded, perl = TRUE)) next
+        if (!grepl(decoded, known, fixed = TRUE)) {
+          offenders <- c(offenders,
+                         paste0(basename(f), ":", i, " ", run,
+                                " -> ", decoded))
+        }
+      }
+    }
+  }
+  expect_equal(offenders, character())
+})
