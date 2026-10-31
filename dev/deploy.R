@@ -79,6 +79,18 @@ if (nzchar(client_id) && nzchar(client_secret)) {
   }
 }
 
+# A previous deploy that could not find its local record created a second
+# Connect content item under a near-identical name, and rsconnect then picks a
+# record by name. Refuse to guess which one is canonical.
+existing <- tryCatch(rsconnect::deployments(root), error = function(e) NULL)
+if (is.data.frame(existing) && nrow(existing) > 1L) {
+  stop("Multiple deployment records exist for this directory (",
+       paste(existing$name, collapse = ", "), "). rsconnect would pick one ",
+       "by name and may publish to the wrong content. Delete the stale ",
+       "record under rsconnect/ so only the intended app remains.",
+       call. = FALSE)
+}
+
 message("Deploying ", app_name, " to Posit Connect Cloud as account '",
         account, "'...")
 root_files <- c(
@@ -97,8 +109,17 @@ message("Bundling ", length(deploy_files), " runtime files.")
 # Build a manifest that contains only the runtime dependency closure. The
 # project renv.lock also records test and development packages; shipping those
 # to Connect Cloud would slow the build and can pull optional system libraries.
+lockfile <- jsonlite::fromJSON(file.path(root, "renv.lock"),
+                             simplifyVector = FALSE)
 manifest_path <- file.path(root, "manifest.json")
-rsconnect::writeManifest(root, appFiles = deploy_files, quiet = TRUE)
+# Resolve from the installed library rather than renv.lock. The lockfile pins
+# lattice and nlme at the versions of the R that produced it, which differ from
+# the R bundled recommended packages here; rsconnect treats any such drift as a
+# hard error even though neither package ships with the app. The version guard
+# below re-checks every package that is actually bundled against renv.lock, so
+# this cannot quietly publish unpinned versions.
+rsconnect::writeManifest(root, appFiles = deploy_files,
+                         dependencyResolution = "library", quiet = TRUE)
 manifest <- jsonlite::fromJSON(manifest_path, simplifyVector = FALSE)
 
 runtime_files <- c("app.R", "global.R",
@@ -139,6 +160,25 @@ if (length(missing)) {
        paste(missing, collapse = ", "), call. = FALSE)
 }
 manifest$packages <- manifest$packages[manifest_names %in% closure]
+# Every package that actually ships must match the version pinned in renv.lock.
+# Runs after pruning so packages outside the runtime closure cannot block a
+# deployment they are not part of.
+pinned <- vapply(lockfile$Packages, function(p) p$Version, character(1))
+drifted <- character(0)
+for (pkg in manifest$packages) {
+  name <- pkg$description$Package
+  got <- pkg$description$Version
+  if (!is.na(pinned[[name]]) && !identical(got, pinned[[name]])) {
+    drifted <- c(drifted, paste0(name, ": manifest ", got,
+                                 " vs lockfile ", pinned[[name]]))
+  }
+}
+if (length(drifted)) {
+  stop("bundled packages disagree with renv.lock:\n  ",
+       paste(drifted, collapse = "\n  "),
+       "\nReconcile with renv::restore() before deploying.", call. = FALSE)
+}
+
 jsonlite::write_json(manifest, manifest_path, auto_unbox = TRUE,
                      pretty = TRUE, null = "null", digits = NA)
 
