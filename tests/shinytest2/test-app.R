@@ -47,9 +47,9 @@ test_that("key UI workflows work end to end", {
   expect_named(cal_data, c("x", "density", "cdf"))
   expect_equal(nrow(cal_data), 1000)
   cal_png <- app$get_download(output = "calibration-download_png")
-  expect_gt(file.size(cal_png), 10000)
+  expect_plot_png(cal_png)
   cal_pdf <- app$get_download(output = "calibration-download_pdf")
-  expect_gt(file.size(cal_pdf), 10000)
+  expect_plot_pdf(cal_pdf)
   expect_false(app$get_js("document.querySelector('#calibration-run').disabled"))
 
   # Language switch changes the static heading and the server-rendered table.
@@ -157,9 +157,9 @@ test_that("key UI workflows work end to end", {
   expect_true(all(c("marginal_summary.csv", "marginal_detail.csv",
                     "metadata.json") %in% bundle_files))
   ml_png <- app$get_download(output = "marginal-download_png")
-  expect_gt(file.size(ml_png), 10000)
+  expect_plot_png(ml_png)
   ml_pdf <- app$get_download(output = "marginal-download_pdf")
-  expect_gt(file.size(ml_pdf), 10000)
+  expect_plot_pdf(ml_pdf)
 
   # Export theme is recorded in the bundle metadata.
   app$set_inputs(`marginal-export_theme` = "screen")

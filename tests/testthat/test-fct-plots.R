@@ -26,7 +26,7 @@ test_that("calibration plots render all modes without errors", {
   }, add = TRUE)
   expect_silent(draw_all())
   grDevices::dev.off()
-  expect_gt(file.size(path), 10000)
+  expect_plot_png(path, 800, 600)
 })
 
 test_that("calibration plot skips quantile labels when asked", {
@@ -39,7 +39,7 @@ test_that("calibration plot skips quantile labels when asked", {
   }, add = TRUE)
   expect_silent(draw_calibration(res, "en", "light", quantile_note = FALSE))
   grDevices::dev.off()
-  expect_gt(file.size(path), 5000)
+  expect_plot_png(path, 640, 480)
 })
 
 test_that("marginal plots handle values and all-non-finite input", {
@@ -65,7 +65,7 @@ test_that("marginal plots handle values and all-non-finite input", {
   expect_silent(draw_marginal(result, "en", "light"))
   expect_silent(draw_marginal(no_finite, "zh", "dark"))
   grDevices::dev.off()
-  expect_gt(file.size(path), 5000)
+  expect_plot_png(path, 800, 600)
 })
 
 test_that("PNG and PDF exports are non-empty in both themes", {
@@ -80,7 +80,7 @@ test_that("PNG and PDF exports are non-empty in both themes", {
       theme = theme, width = 1600, height = 1200, res = 150
     )
     expect_true(file.exists(png))
-    expect_gt(file.size(png), 10000)
+  expect_plot_png(png)   # save_plot_png scales by res; geometry asserted via signature
 
     pdf <- file.path(tmp, paste0("cal-", theme, ".pdf"))
     save_plot_pdf(
@@ -89,7 +89,7 @@ test_that("PNG and PDF exports are non-empty in both themes", {
       theme = theme
     )
     expect_true(file.exists(pdf))
-    expect_gt(file.size(pdf), 5000)
+    expect_plot_pdf(pdf)
   }
 })
 

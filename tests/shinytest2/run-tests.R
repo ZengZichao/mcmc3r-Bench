@@ -14,6 +14,9 @@ if (dir.exists(lib)) .libPaths(c(lib, .libPaths()))
 
 library(testthat)
 library(shinytest2)
+# The plot helpers live with the unit tests; the downloads checked here are the same
+# artefacts, so they need the same encoder-independent assertions.
+source(file.path(root, "tests", "testthat", "helper-setup.R"))
 for (file in c("test-app.R", "test-theme.R")) {
   test_file(file.path(root, "tests", "shinytest2", file),
             reporter = "summary")
