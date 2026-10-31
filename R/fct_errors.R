@@ -151,21 +151,21 @@ app_error_ui <- function(err, lang = "en", module = NULL, id = NULL) {
         class = "app-alert-actions",
         shiny::tags$button(
           type = "button",
-          class = "btn btn-sm btn-outline-secondary",
+          class = "btn btn-sm btn-utility",
           `data-copy-text` = diag,
           shiny::HTML(icon_svg("copy")),
           shiny::tags$span(copy_label)
         ),
         shiny::tags$button(
           type = "button",
-          class = "btn btn-sm btn-outline-secondary",
+          class = "btn btn-sm btn-utility",
           `data-nav` = "help",
           shiny::HTML(icon_svg("help")),
           shiny::tags$span(help_label)
         ),
         shiny::tags$a(
           href = APP_ISSUES, target = "_blank", rel = "noopener noreferrer",
-          class = "btn btn-sm btn-outline-secondary",
+          class = "btn btn-sm btn-utility",
           shiny::HTML(icon_svg("github")),
           shiny::tags$span(tr("about.issue", lang))
         )

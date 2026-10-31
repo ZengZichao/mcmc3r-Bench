@@ -3,11 +3,12 @@ test_that("light and dark tokens provide accessible text contrast", {
   dark <- theme_tokens("dark")
   expect_gte(contrast_ratio(light$text, light$bg), 7)
   expect_gte(contrast_ratio(light$text_muted, light$bg), 4.5)
-  expect_gte(contrast_ratio("#FFFFFF", light$primary), 4.5)
+  expect_gte(contrast_ratio(light$on_primary, light$primary), 4.5)
   expect_gte(contrast_ratio(light$accent_ink, light$primary_soft), 4.5)
+  expect_gte(contrast_ratio(light$danger, light$bg), 4.5)
   expect_gte(contrast_ratio(dark$text, dark$bg), 7)
   expect_gte(contrast_ratio(dark$text_muted, dark$bg), 4.5)
-  expect_gte(contrast_ratio("#06201F", dark$primary), 4.5)
+  expect_gte(contrast_ratio(dark$on_primary, dark$primary), 4.5)
 })
 
 test_that("theme tokens are semantic and distinct", {
@@ -25,6 +26,6 @@ test_that("plot colours follow the selected theme", {
   light <- plot_colors("light")
   dark <- plot_colors("dark")
   expect_identical(light$bg, "#FFFFFF")
-  expect_identical(dark$bg, "#0B1220")
+  expect_identical(dark$bg, "#000000")
   expect_identical(light$primary, theme_tokens("light")$primary)
 })

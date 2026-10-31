@@ -96,16 +96,34 @@ tr <- function(key, lang = "en", ...) {
   text
 }
 
-tr_vec <- function(keys, lang = "en") {
-  vapply(keys, tr, character(1), lang = lang, USE.NAMES = FALSE)
-}
-
 # Span carrying a data-i18n attribute. The client-side dictionary updates the
 # text instantly when the user switches language without a server round trip.
-tr_span <- function(key, lang = "en", class = NULL, tag = "span") {
-  args <- list(`data-i18n` = key, tr(key, lang))
+tr_span <- function(key, lang = "en", class = NULL, tag = "span", ...) {
+  values <- list(...)
+  args <- list(`data-i18n` = key, tr(key, lang, ...))
+  if (length(values)) {
+    args$`data-i18n-params` <- jsonlite::toJSON(values, auto_unbox = TRUE)
+  }
   if (!is.null(class)) args$class <- class
   do.call(shiny::tags[[tag]], args)
+}
+
+# Shiny hands the UI function a rook request *environment*, not a list, so an
+# is.list() guard silently discards the query string.
+query_string_from_request <- function(request) {
+  if (is.null(request)) return("")
+  qs <- tryCatch(request$QUERY_STRING, error = function(e) NULL)
+  if (is.null(qs) && is.list(request)) qs <- request$QUERY_STRING
+  if (is.null(qs)) return("")
+  sub("^\\?", "", as.character(qs)[1])
+}
+
+query_param <- function(query, name) {
+  parsed <- tryCatch(
+    shiny::parseQueryString(if (is.null(query)) "" else query, nested = FALSE),
+    error = function(e) list()
+  )
+  parsed[[name]]
 }
 
 # A translation dictionary for the browser, used by dev/build_i18n.R.
@@ -128,14 +146,6 @@ lang_from_query <- function(query) {
   value <- parsed$lang
   if (!value %in% c("en", "zh", "zh-CN", "zh-cn")) return(NULL)
   normalize_lang(value)
-}
-
-# Language choices used in the header and in select inputs.
-lang_choices <- function(lang = "en") {
-  c(
-    stats::setNames("en", tr("lang.switch_to_en", lang)),
-    stats::setNames("zh", tr("lang.switch_to_zh", lang))
-  )
 }
 
 theme_choices <- function(lang = "en") {

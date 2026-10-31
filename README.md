@@ -4,10 +4,10 @@
 
 [English](README.md) | [中文](README.zh-CN.md)
 
-[![version](https://img.shields.io/badge/version-0.1.0-0C7A7C)](VERSION)
-[![license](https://img.shields.io/badge/license-MIT-0C7A7C)](LICENSE)
-[![docs](https://img.shields.io/badge/docs-EN%20%7C%20ZH-0C7A7C)](docs/README.md)
-[![live demo](https://img.shields.io/badge/live%20demo-Connect%20Cloud-0C7A7C)](https://zengzichao-mcmc3r-bench.share.connect.posit.cloud/)
+[![version](https://img.shields.io/badge/version-0.1.0-0066CC)](VERSION)
+[![license](https://img.shields.io/badge/license-MIT-0066CC)](LICENSE)
+[![docs](https://img.shields.io/badge/docs-EN%20%7C%20ZH-0066CC)](docs/README.md)
+[![live demo](https://img.shields.io/badge/live%20demo-Connect%20Cloud-0066CC)](https://zengzichao-mcmc3r-bench.share.connect.posit.cloud/)
 
 mcmc3r Bench wraps three `mcmc3r` workflows in a web interface:
 

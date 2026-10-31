@@ -77,12 +77,17 @@ mcmc_separator_label <- function(sep, lang = "en") {
 mod_mcmc_summary_ui <- function(id, lang = "en") {
   ns <- shiny::NS(id)
   shiny::tagList(
-    page_header("mcmc.title", "mcmc.description", lang, icon = "file"),
+    page_header("mcmc.title", "mcmc.description", lang),
     shiny::tags$div(
       class = "workbench-grid",
       control_panel(
         title_key = "mcmc.controls",
         lang = lang,
+        shiny::tags$div(
+          class = "run-row",
+          run_button(ns("run"), "mcmc.run", lang),
+          reset_button(ns("reset"), lang)
+        ),
         shiny::fileInput(
           ns("file"),
           label = field_label("mcmc.upload", lang),
@@ -106,13 +111,13 @@ mod_mcmc_summary_ui <- function(id, lang = "en") {
             class = "example-buttons",
             shiny::actionButton(ns("ex_microcebus"),
                                 tr_span("mcmc.example.microcebus", lang),
-                                class = "btn btn-sm btn-outline-secondary"),
+                                class = "btn btn-sm btn-utility"),
             shiny::actionButton(ns("ex_hominids"),
                                 tr_span("mcmc.example.hominids", lang),
-                                class = "btn btn-sm btn-outline-secondary"),
+                                class = "btn btn-sm btn-utility"),
             shiny::actionButton(ns("ex_carnivores"),
                                 tr_span("mcmc.example.carnivores", lang),
-                                class = "btn btn-sm btn-outline-secondary")
+                                class = "btn btn-sm btn-utility")
           ),
           shiny::tags$p(class = "field-note", tr_span("mcmc.example_note", lang))
         ),
@@ -136,11 +141,6 @@ mod_mcmc_summary_ui <- function(id, lang = "en") {
           ns("show_preview"),
           label = tr_span("mcmc.show_preview", lang),
           value = TRUE
-        ),
-        shiny::tags$div(
-          class = "run-row",
-          run_button(ns("run"), "mcmc.run", lang),
-          reset_button(ns("reset"), lang)
         ),
         footer = shiny::tags$p(class = "panel-hint", tr_span("mcmc.run_hint", lang))
       ),
@@ -185,7 +185,7 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
             set_data(parsed$data,
                      label = safe_basename(file$name[[1]]),
                      diagnostics = parsed$diagnostics)
-            shiny::showNotification(tr("mcmc.parsed", lang()), type = "message")
+            notify(session, tr("mcmc.parsed", lang()), type = "message")
           },
           app_error = function(e) {
             state$data <- NULL
@@ -213,7 +213,7 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
                                         name = mcmc_example_label(name, lang())),
                    diagnostics = ex$diagnostics,
                    example = name)
-          shiny::showNotification(
+          notify(session, 
             tr("mcmc.example_loaded", lang(), name = mcmc_example_label(name, lang())),
             type = "message"
           )
@@ -234,7 +234,9 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
     shiny::observeEvent(input$run, {
       state$error <- NULL
       if (is.null(state$data)) {
-        shiny::showNotification(tr("mcmc.no_data", lang()), type = "warning")
+        state$error <- app_error("mcmc", "MCMC-009",
+                                 message_key = "mcmc.no_data",
+                                 hint_key = "mcmc.run_hint")
         return()
       }
       session$sendCustomMessage("run-state",
@@ -298,7 +300,7 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
       shiny::updateSelectInput(session, "sep_choice", selected = "auto")
       shiny::updateCheckboxInput(session, "show_preview", value = TRUE)
       session$sendCustomMessage("reset-input", ns("file"))
-      shiny::showNotification(tr("mcmc.reset_done", lang()), type = "message")
+      notify(session, tr("mcmc.reset_done", lang()), type = "message")
     })
 
     output$result_area <- shiny::renderUI({
@@ -306,10 +308,9 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
         return(app_error_ui(state$error, lang(), module = "mcmc"))
       }
       if (is.null(state$data)) {
-        return(shiny::tagList(
-          empty_state("mcmc.empty_title", "mcmc.empty_body", lang(), icon = "file"),
-          shiny::tags$p(class = "hint-text", tr_span("mcmc.run_hint", lang()))
-        ))
+        return(
+          empty_state("mcmc.empty_title", "mcmc.empty_body", lang(), icon = "file")
+        )
       }
 
       file_label <- if (!is.null(state$example)) {

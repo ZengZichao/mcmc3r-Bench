@@ -25,7 +25,7 @@ about_row <- function(label_key, value, lang = "en") {
 mod_about_ui <- function(id, lang = "en") {
   ns <- shiny::NS(id)
   shiny::tagList(
-    page_header("about.title", "about.description", lang, icon = "info"),
+    page_header("about.title", "about.description", lang),
     shiny::uiOutput(ns("content"))
   )
 }
@@ -50,9 +50,10 @@ mod_about_server <- function(id, lang) {
                   external_link(paste0("mailto:", APP_EMAIL), APP_EMAIL), l),
         about_row("about.orcid", orcid_link, l),
         about_row("about.repo",
-                  external_link(APP_REPO, APP_REPO), l),
+                  external_link(APP_REPO,
+                                sub("^https://github\\.com/", "", APP_REPO)), l),
         about_row("about.issue",
-                  external_link(APP_ISSUES, APP_ISSUES), l),
+                  external_link(APP_ISSUES, tr("common.issues", l)), l),
         about_row("about.docs_en",
                   external_link(paste0(APP_REPO, "/blob/main/docs/en/USER_GUIDE.md"),
                                 "docs/en/"), l),
@@ -69,7 +70,7 @@ mod_about_server <- function(id, lang) {
         about_row("about.upstream_authors", UPSTREAM_AUTHORS, l),
         about_row("about.upstream_version", UPSTREAM_VERSION, l),
         about_row("about.upstream_sha",
-                  shiny::tags$code(UPSTREAM_SHA), l),
+                  shiny::tags$code(substr(UPSTREAM_SHA, 1, 7)), l),
         shiny::tags$p(class = "note", tr("about.no_endorsement", l))
       )
 

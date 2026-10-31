@@ -4,11 +4,11 @@ help_tip <- function(key, lang = "en") {
   shiny::tags$span(
     class = "help-tip",
     tabindex = "0",
-    role = "img",
+    role = "button",
+    `aria-haspopup` = "true",
+    `aria-expanded` = "false",
     `aria-label` = tr(key, lang),
     `data-i18n-aria-label` = key,
-    title = tr(key, lang),
-    `data-i18n-title` = key,
     "?"
   )
 }
@@ -20,14 +20,11 @@ field_label <- function(key, lang = "en", help_key = NULL) {
   )
 }
 
-page_header <- function(title_key, desc_key, lang = "en", icon = NULL) {
+page_header <- function(title_key, desc_key, lang = "en") {
   shiny::tags$div(
-    class = "page-header",
+    class = "page-hero",
     shiny::tags$div(
-      class = "page-header-icon",
-      if (!is.null(icon)) shiny::HTML(icon_svg(icon, size = 26))
-    ),
-    shiny::tags$div(
+      class = "page-hero-inner",
       shiny::tags$h1(class = "page-title", tr_span(title_key, lang)),
       shiny::tags$p(class = "page-desc", tr_span(desc_key, lang))
     )
@@ -35,23 +32,40 @@ page_header <- function(title_key, desc_key, lang = "en", icon = NULL) {
 }
 
 control_panel <- function(..., title_key = NULL, lang = "en", footer = NULL) {
-  shiny::tags$aside(
+  title_id <- if (!is.null(title_key)) {
+    paste0("panel-", gsub("[^A-Za-z0-9_-]", "-", title_key))
+  } else {
+    NULL
+  }
+  shiny::tags$section(
     class = "control-panel",
+    `aria-labelledby` = title_id,
     if (!is.null(title_key)) {
-      shiny::tags$div(class = "panel-title", tr_span(title_key, lang))
+      shiny::tags$h2(id = title_id, class = "panel-title",
+                     tr_span(title_key, lang))
     },
-    ...,
-    if (!is.null(footer)) shiny::tags$div(class = "panel-footer", footer)
+    shiny::tags$div(
+      class = "control-panel-card",
+      ...,
+      if (!is.null(footer)) shiny::tags$div(class = "panel-footer", footer)
+    )
   )
 }
 
 result_panel <- function(..., title_key = NULL, lang = "en") {
+  title_id <- if (!is.null(title_key)) {
+    paste0("panel-", gsub("[^A-Za-z0-9_-]", "-", title_key))
+  } else {
+    NULL
+  }
   shiny::tags$section(
     class = "result-panel",
+    `aria-labelledby` = title_id,
     if (!is.null(title_key)) {
-      shiny::tags$div(class = "panel-title", tr_span(title_key, lang))
+      shiny::tags$h2(id = title_id, class = "panel-title",
+                     tr_span(title_key, lang))
     },
-    ...
+    shiny::tags$div(class = "result-panel-body", ...)
   )
 }
 
@@ -85,24 +99,37 @@ reset_button <- function(id, lang = "en") {
       shiny::HTML(icon_svg("reset", size = 16)),
       tr_span("common.reset", lang)
     ),
-    class = "btn btn-outline-secondary btn-reset"
+    class = "btn btn-ghost-pill btn-reset"
   )
 }
 
+# One notification channel. Shiny's showNotification() renders its own widget
+# that is styled separately from the app's toast, so server-side feedback used
+# to look and behave differently from client-side feedback.
+notify <- function(session, message, type = "message") {
+  kind <- switch(type, error = "error", warning = "warn", "")
+  session$sendCustomMessage("toast", list(message = message, type = kind))
+  invisible(NULL)
+}
+
 download_button <- function(id, label_key, lang = "en", icon = "download",
-                            class = "btn btn-sm btn-outline-secondary") {
+                            class = "btn btn-sm btn-utility") {
+  # icon = NULL: Shiny otherwise injects <i class="fas fa-download"> next to
+  # our own inline SVG, which renders two download glyphs and pulls in the
+  # whole Font Awesome stylesheet for four icons.
   shiny::downloadButton(
     id,
     label = shiny::tagList(
       shiny::HTML(icon_svg(icon, size = 16)),
       tr_span(label_key, lang)
     ),
-    class = class
+    class = class,
+    icon = NULL
   )
 }
 
 copy_button <- function(target, lang = "en", label_key = "common.copy",
-                        class = "btn btn-sm btn-outline-secondary copy-btn") {
+                        class = "btn btn-sm btn-utility copy-btn") {
   shiny::tags$button(
     type = "button",
     class = class,
@@ -125,17 +152,19 @@ result_toolbar <- function(..., lang = "en") {
 }
 
 metric_box <- function(label_key, value, lang = "en", sub = NULL,
-                       status = NULL, id = NULL) {
+                       status = NULL, id = NULL, compact = FALSE) {
   shiny::tags$div(
-    class = paste("metric-box", if (!is.null(status)) paste0("metric-", status)),
+    class = paste(
+      "metric-box",
+      if (!is.null(status)) paste0("metric-", status),
+      if (isTRUE(compact)) "metric-compact"
+    ),
     id = id,
     shiny::tags$div(class = "metric-label", tr_span(label_key, lang)),
     shiny::tags$div(class = "metric-value", value),
     if (!is.null(sub)) shiny::tags$div(class = "metric-sub", sub)
   )
 }
-
-das_alert <- function(...) shiny::tags$div(class = "app-alert", ...)
 
 alert_from_warnings <- function(warnings, lang = "en") {
   if (!length(warnings)) return(NULL)

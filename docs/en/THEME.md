@@ -5,8 +5,8 @@
 | lang | en |
 | pair | ../zh/THEME.md |
 | applies_to | 0.1.0 |
-| doc_version | 1.0 |
-| last_reviewed | 2026-10-24 |
+| doc_version | 1.1 |
+| last_reviewed | 2026-10-25 |
 | canonical | true |
 | status | current |
 
@@ -18,6 +18,25 @@ Light and dark themes cover the page, cards, forms, buttons, tables, code
 blocks, alerts, modals, the file input, the footer, plots, and exports. Theme
 and language are independent: any of the four combinations must work.
 
+## Design language
+
+The interface follows the Apple-inspired system in `design-md/apple/DESIGN.md`:
+
+- **Action Blue is the only UI accent.** Every link, pill CTA, selected state,
+  and focus ring uses `primary`; warnings and errors use their status hues only.
+- **Surfaces create hierarchy.** White tiles sit on parchment `bg` in light mode;
+  near-black tiles (`surface`) sit on true black in dark mode. Cards use a
+  1px hairline and **no shadow**.
+- **Type is quiet and tight.** Display text is weight 600 with negative
+  tracking; body text runs at 17px / 1.47. Weight 500 is not used.
+- **Two button grammars.** Pill CTAs for actions and compact 8px utility buttons
+  for downloads and examples. Press state is `transform: scale(0.95)`.
+- **One shadow, reserved for floating layers.** The interface chrome never
+  carries a drop shadow; the only shadow in the system is `--product-shadow`,
+  and it is applied to the help popover and to product imagery.
+- **Global chrome recedes.** A 48px black global nav, a frosted 52px sub-nav,
+  a flat notice strip, and a parchment footer frame the workbench.
+
 ## Tokens
 
 The semantic tokens are defined twice: in `R/fct_theme.R` for plots/exports and
@@ -25,24 +44,35 @@ in `www/css/app.css` as CSS variables. Keep them in sync.
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `bg` | `#F7F9FB` | `#0B1220` | Page background |
-| `surface` | `#FFFFFF` | `#111A2B` | Cards and tables |
-| `surface2` | `#EEF3F7` | `#172236` | Secondary surfaces |
-| `text` | `#10243E` | `#E6EDF5` | Primary text |
-| `text_muted` | `#48617A` | `#A9B7C6` | Secondary text |
-| `primary` | `#0C7A7C` | `#3CC7C2` | Buttons, links, main curve |
-| `primary_soft` | `#D9F0EF` | `#123B3A` | Selected state, hints |
-| `accent` | `#B87316` | `#F2B45C` | Warnings and highlights |
-| `accent_ink` | `#6B4300` | `#FFD79A` | Warning text |
-| `danger` | `#B23A2E` | `#FF7A6B` | Errors |
-| `border` | `#D5DFE8` | `#263445` | Borders and dividers |
-| `focus` | `#1F6FEB` | `#7CC4FF` | Focus ring |
-| `plot_bg` | `#FFFFFF` | `#0B1220` | Plot background |
-| `plot_fg` | `#10243E` | `#E6EDF5` | Plot text and axes |
-| `plot_grid` | `#DCE4EC` | `#263445` | Grid lines |
+| `bg` | `#F5F5F7` | `#000000` | Page background |
+| `surface` | `#FFFFFF` | `#1D1D1F` | Cards, tables, panels |
+| `surface2` | `#FAFAFC` | `#272729` | Pearl tiles, secondary surfaces |
+| `text` | `#1D1D1F` | `#F5F5F7` | Primary text |
+| `text_muted` | `#6E6E73` | `#A1A1A6` | Secondary text |
+| `primary` | `#0066CC` | `#2997FF` | Action Blue: links, buttons, main curve |
+| `primary_soft` | `#E8F1FB` | `#0A2A45` | Selected state, hints |
+| `on_primary` | `#FFFFFF` | `#001D33` | Text on primary buttons |
+| `accent` | `#B25000` | `#FFB340` | Warnings and highlights |
+| `accent_ink` | `#7A3B00` | `#FFD9A0` | Warning text |
+| `danger` | `#B3261E` | `#FF6961` | Errors |
+| `danger_soft` | `#FDECEA` | `#3A1210` | Error alert surface |
+| `ok` | `#1D7A46` | `#5BD6A8` | Success status |
+| `border` | `#C9C9CF` | `#47474B` | Decorative hairlines only |
+| `border_strong` | `#86868B` | `#7C7C81` | Boundaries that identify a control; 3:1 against `surface` |
+| `divider` | `#DEDEE3` | `#3A3A3F` | Section dividers |
+| `tile_1` | `#FAFAFC` | `#272729` | Panel inside a card (empty states, metric tiles) |
+| `tile_2` | `#F5F5F7` | `#2A2A2C` | Alternate panel fill |
+| `tile_fg` | `#1D1D1F` | `#F5F5F7` | Text on `tile_1`; always paired with it |
+| `tile_muted` | `#6E6E73` | `#CCCCCC` | Secondary text on `tile_1` |
+| `focus` | `#0071E3` | `#2997FF` | Focus ring |
+| `plot_bg` | `#FFFFFF` | `#000000` | Plot background |
+| `plot_fg` | `#1D1D1F` | `#F5F5F7` | Plot text and axes |
+| `plot_grid` | `#E0E0E0` | `#333336` | Grid lines |
 
-The light primary is `#0C7A7C` rather than a lighter teal so that white button
-text reaches a contrast ratio of at least 4.5:1.
+Chart series use an Apple system-inspired data palette (blue, indigo, orange,
+purple, green) and are not UI accents. The light primary is `#0066CC`; white
+button text reaches 5.57:1. The dark primary is `#2997FF` with near-black text
+(6.96:1), keeping the bright Apple blue while still meeting WCAG AA.
 
 ## Initialisation (no flash)
 
@@ -52,7 +82,7 @@ An inline script in `<head>` runs before the page is painted:
    `prefers-color-scheme`.
 2. Sets `<html data-bs-theme="light|dark">`, a `theme-dark` class, and
    `data-theme`.
-3. Updates `<meta name="theme-color">`.
+3. Updates `<meta name="theme-color">` (`#F5F5F7` light, `#000000` dark).
 
 Server-rendered HTML does not hard-code light backgrounds or text colours.
 
@@ -77,8 +107,9 @@ and PDF uses cairo_pdf, with the DPI adjusted per export.
 
 ## Tables
 
-DT uses Bootstrap 5 styling. Dark mode overrides the table background, header,
-striped rows, hover, links, and empty-state text so no white cells remain.
+DT is restyled as a gallery table: transparent background, hairline row rules,
+small muted headers, no zebra stripes, and a soft Action Blue hover. Dark mode
+overrides every cell, control, and empty-state colour so no white cells remain.
 
 ## Exports
 
@@ -91,6 +122,14 @@ striped rows, hover, links, and empty-state text so no white cells remain.
 Exports are regenerated from the result object with the selected theme; the
 screen bitmap is never reused. Metadata records `screen_theme` and
 `export_theme`.
+
+## Print
+
+`www/css/print.css` must reset **every** token that carries a dark-mode value,
+including the `*_soft` surfaces, `tile_*` fills and `inverse` text. A token left
+unreset makes dark-mode printing paint dark text on a dark panel on paper.
+`tests/testthat/test-frontend-design.R` guards the palette; the print sheet is
+reviewed alongside any new token.
 
 ## Accessibility
 

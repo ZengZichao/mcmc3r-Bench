@@ -5,41 +5,49 @@
 THEME_TOKENS <- list(
   light = list(
     mode = "light",
-    bg = "#F7F9FB",
+    bg = "#F5F5F7",
     surface = "#FFFFFF",
-    surface2 = "#EEF3F7",
-    text = "#10243E",
-    text_muted = "#48617A",
-    primary = "#0C7A7C",
-    primary_soft = "#D9F0EF",
-    accent = "#B87316",
-    accent_ink = "#6B4300",
-    danger = "#B23A2E",
-    border = "#D5DFE8",
-    focus = "#1F6FEB",
+    surface2 = "#FAFAFC",
+    text = "#1D1D1F",
+    text_muted = "#6E6E73",
+    primary = "#0066CC",
+    primary_soft = "#E8F1FB",
+    on_primary = "#FFFFFF",
+    accent = "#B25000",
+    accent_ink = "#7A3B00",
+    danger = "#B3261E",
+    danger_soft = "#FDECEA",
+    ok = "#1D7A46",
+    border = "#C9C9CF",
+    divider = "#DEDEE3",
+    focus = "#0071E3",
     plot_bg = "#FFFFFF",
-    plot_fg = "#10243E",
-    plot_grid = "#DCE4EC",
-    series = c("#0C7A7C", "#2F6FB3", "#B87316", "#6B5CA5", "#B23A2E")
+    plot_fg = "#1D1D1F",
+    plot_grid = "#E0E0E0",
+    series = c("#0071E3", "#5E5CE6", "#B25000", "#8944AB", "#1D7A46")
   ),
   dark = list(
     mode = "dark",
-    bg = "#0B1220",
-    surface = "#111A2B",
-    surface2 = "#172236",
-    text = "#E6EDF5",
-    text_muted = "#A9B7C6",
-    primary = "#3CC7C2",
-    primary_soft = "#123B3A",
-    accent = "#F2B45C",
-    accent_ink = "#FFD79A",
-    danger = "#FF7A6B",
-    border = "#263445",
-    focus = "#7CC4FF",
-    plot_bg = "#0B1220",
-    plot_fg = "#E6EDF5",
-    plot_grid = "#263445",
-    series = c("#3CC7C2", "#7CB8FF", "#F2B45C", "#B9A7FF", "#FF7A6B")
+    bg = "#000000",
+    surface = "#1D1D1F",
+    surface2 = "#272729",
+    text = "#F5F5F7",
+    text_muted = "#A1A1A6",
+    primary = "#2997FF",
+    primary_soft = "#0A2A45",
+    on_primary = "#001D33",
+    accent = "#FFB340",
+    accent_ink = "#FFD9A0",
+    danger = "#FF6961",
+    danger_soft = "#3A1210",
+    ok = "#5BD6A8",
+    border = "#47474B",
+    divider = "#3A3A3F",
+    focus = "#2997FF",
+    plot_bg = "#000000",
+    plot_fg = "#F5F5F7",
+    plot_grid = "#333336",
+    series = c("#2997FF", "#BF5AF2", "#FFB340", "#64D2FF", "#5BD6A8")
   )
 )
 
@@ -51,9 +59,9 @@ theme_tokens <- function(theme = c("light", "dark"), export = FALSE) {
 }
 
 app_font_stack <- paste(
-  "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI",
-  "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC",
-  "sans-serif", sep = ", "
+  "SF Pro Text", "SF Pro Display", "system-ui", "-apple-system",
+  "BlinkMacSystemFont", "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+  "Microsoft YaHei", "Noto Sans SC", "sans-serif", sep = ", "
 )
 
 app_bs_theme <- function() {
@@ -61,8 +69,8 @@ app_bs_theme <- function() {
     version = 5,
     primary = THEME_TOKENS$light$primary,
     secondary = THEME_TOKENS$light$text_muted,
-    success = THEME_TOKENS$light$primary,
-    info = "#2F6FB3",
+    success = THEME_TOKENS$light$ok,
+    info = THEME_TOKENS$light$primary,
     warning = THEME_TOKENS$light$accent,
     danger = THEME_TOKENS$light$danger,
     base_font = app_font_stack,

@@ -24,12 +24,17 @@ ml_beta_source_choices <- function(lang = "en") {
 mod_marginal_ui <- function(id, lang = "en") {
   ns <- shiny::NS(id)
   shiny::tagList(
-    page_header("ml.title", "ml.description", lang, icon = "tree"),
+    page_header("ml.title", "ml.description", lang),
     shiny::tags$div(
       class = "workbench-grid",
       control_panel(
         title_key = "ml.controls",
         lang = lang,
+        shiny::tags$div(
+          class = "run-row",
+          run_button(ns("run"), "ml.run", lang),
+          reset_button(ns("reset"), lang)
+        ),
         shiny::selectInput(
           ns("method"),
           label = field_label("ml.method", lang, "ml.method_help"),
@@ -104,7 +109,7 @@ mod_marginal_ui <- function(id, lang = "en") {
         ),
         collapsible_advanced(
           lang = lang,
-          open = TRUE,
+          open = FALSE,
           shiny::tags$p(class = "field-note", tr_span("ml.beta_note", lang)),
           shiny::conditionalPanel(
             condition = sprintf("input['%s'] == 'zip'", ns("chain_source")),
@@ -124,12 +129,12 @@ mod_marginal_ui <- function(id, lang = "en") {
             )
           ),
           shiny::tags$div(
-            class = "run-row",
+            class = "button-row",
             shiny::actionButton(
               ns("generate"),
               label = shiny::tagList(shiny::HTML(icon_svg("sliders", 16)),
                                      tr_span("ml.generate", lang)),
-              class = "btn btn-sm btn-outline-secondary"
+              class = "btn btn-sm btn-utility"
             ),
             download_button(ns("download_beta"), "ml.beta_download", lang)
           ),
@@ -141,19 +146,14 @@ mod_marginal_ui <- function(id, lang = "en") {
             ns("demo"),
             label = shiny::tagList(shiny::HTML(icon_svg("chart", 16)),
                                    tr_span("ml.demo", lang)),
-            class = "btn btn-sm btn-outline-secondary"
+            class = "btn btn-sm btn-utility"
           ),
           shiny::tags$p(class = "field-note", tr_span("ml.example_zip_note", lang))
-        ),
-        shiny::tags$div(
-          class = "run-row",
-          run_button(ns("run"), "ml.run", lang),
-          reset_button(ns("reset"), lang)
         ),
         footer = shiny::tags$div(
           shiny::tags$p(class = "panel-hint", tr_span("ml.run_hint", lang)),
           shiny::tags$p(class = "panel-hint small",
-                        tr("ml.limits", lang,
+                        tr_span("ml.limits", lang,
                            ss = LIMITS$beta_max_ss,
                            gq = LIMITS$beta_max_gq,
                            gauss = LIMITS$gauss_max,
@@ -241,7 +241,7 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
           state$generated_beta <- beta
           state$generated_method <- input$method
           state$error <- NULL
-          shiny::showNotification(
+          notify(session, 
             tr("ml.beta_generated_note", lang(),
                n = length(beta),
                method = tr(ml_method_label_key(input$method), lang())),
@@ -262,7 +262,7 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
           state$error <- NULL
           shiny::updateRadioButtons(session, "chain_source", selected = "zip")
           session$sendCustomMessage("reset-input", ns("zip"))
-          shiny::showNotification(tr("ml.demo_loaded", lang()), type = "message")
+          notify(session, tr("ml.demo_loaded", lang()), type = "message")
         },
         app_error = function(e) state$error <- e,
         error = function(e) state$error <- as_app_error(e, "marginal")
@@ -303,8 +303,12 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
                   zip_path <- state$demo_path
                 }
                 if (is.null(zip_path)) {
-                  shiny::showNotification(tr("ml.chain_required", lang()),
-                                          type = "warning")
+
+                  state$error <- app_error("marginal", "ML-012",
+
+                                     message_key = "ml.no_data",
+
+                                     hint_key = "ml.chain_required")
                   return()
                 }
                 shiny::incProgress(0.15, detail = tr("common.loading", lang()))
@@ -312,8 +316,12 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
               } else {
                 files <- input$files
                 if (is.null(files) || !nrow(files)) {
-                  shiny::showNotification(tr("ml.chain_required", lang()),
-                                          type = "warning")
+
+                  state$error <- app_error("marginal", "ML-012",
+
+                                     message_key = "ml.no_data",
+
+                                     hint_key = "ml.chain_required")
                   return()
                 }
                 paths <- vapply(seq_len(nrow(files)), function(i) {
@@ -335,8 +343,9 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
                 } else {
                   beta_input <- input$beta_file
                   if (is.null(beta_input) || !nrow(beta_input)) {
-                    shiny::showNotification(tr("ml.beta_required", lang()),
-                                            type = "warning")
+                    state$error <- app_error("marginal", "ML-013",
+                                     message_key = "ml.beta_required",
+                                     hint_key = "ml.beta_upload_help")
                     return()
                   }
                   beta_path <- stash_upload(beta_input$datapath[[1]],
@@ -396,7 +405,7 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
       session$sendCustomMessage("reset-input", ns("zip"))
       session$sendCustomMessage("reset-input", ns("files"))
       session$sendCustomMessage("reset-input", ns("beta_file"))
-      shiny::showNotification(tr("ml.reset_done", lang()), type = "message")
+      notify(session, tr("ml.reset_done", lang()), type = "message")
     })
 
     output$beta_preview_area <- shiny::renderUI({
@@ -458,8 +467,7 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
       if (is.null(state$result)) {
         return(shiny::tagList(
           demo_alert,
-          empty_state("ml.empty_title", "ml.empty_body", lang(), icon = "tree"),
-          shiny::tags$p(class = "hint-text", tr_span("ml.run_hint", lang()))
+          empty_state("ml.empty_title", "ml.empty_body", lang(), icon = "tree")
         ))
       }
 
@@ -516,7 +524,7 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
         metric_box("ml.n_beta", fmt_int(res$n_beta), lang()),
         metric_box("ml.method_label", tr(ml_method_label_key(res$method), lang()), lang()),
         metric_box("ml.model", res$model_name, lang()),
-        metric_box("ml.computed_at", res$computed_at, lang())
+        metric_box("ml.computed_at", res$computed_at, lang(), compact = TRUE)
       )
 
       shiny::tagList(
@@ -556,8 +564,11 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
           metrics,
           section_card(
             "ml.plot_title", lang(),
-            shiny::tags$div(class = "plot-wrap",
-                            shiny::plotOutput(ns("plot"), height = "340px"))
+            shiny::tags$div(
+              class = "plot-wrap",
+              `data-plot-alt` = tr("plot.alt.marginal", lang()),
+              shiny::plotOutput(ns("plot"), height = "340px")
+            )
           ),
           section_card(
             "ml.detail_title", lang(),

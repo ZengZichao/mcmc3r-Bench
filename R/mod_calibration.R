@@ -33,12 +33,17 @@ parse_xmax <- function(text, module = "calibration") {
 mod_calibration_ui <- function(id, lang = "en") {
   ns <- shiny::NS(id)
   shiny::tagList(
-    page_header("cal.title", "cal.description", lang, icon = "sliders"),
+    page_header("cal.title", "cal.description", lang),
     shiny::tags$div(
       class = "workbench-grid",
       control_panel(
         title_key = "cal.controls",
         lang = lang,
+        shiny::tags$div(
+          class = "run-row",
+          run_button(ns("run"), "common.run", lang),
+          reset_button(ns("reset"), lang)
+        ),
         shiny::selectInput(
           ns("type"),
           label = field_label("cal.type", lang, "cal.help.type"),
@@ -133,11 +138,6 @@ mod_calibration_ui <- function(id, lang = "en") {
             value = "0.025, 0.5, 0.975",
             width = "100%"
           )
-        ),
-        shiny::tags$div(
-          class = "run-row",
-          run_button(ns("run"), "common.run", lang),
-          reset_button(ns("reset"), lang)
         ),
         footer = shiny::tags$p(class = "panel-hint", tr_span("cal.run_hint", lang))
       ),
@@ -244,7 +244,7 @@ mod_calibration_server <- function(id, lang, theme, active, session_dir,
       shiny::updateCheckboxInput(session, "show_density", value = TRUE)
       shiny::updateCheckboxInput(session, "show_cdf", value = FALSE)
       shiny::updateTextInput(session, "probs", value = "0.025, 0.5, 0.975")
-      shiny::showNotification(tr("cal.reset_done", lang()), type = "message")
+      notify(session, tr("cal.reset_done", lang()), type = "message")
     })
 
     show_density <- shiny::reactive(isTRUE(input$show_density))
@@ -257,10 +257,9 @@ mod_calibration_server <- function(id, lang, theme, active, session_dir,
         return(app_error_ui(state$error, lang(), module = "calibration"))
       }
       if (is.null(state$result)) {
-        return(shiny::tagList(
-          empty_state("cal.empty_title", "cal.empty_body", lang(), icon = "chart"),
-          shiny::tags$p(class = "hint-text", tr_span("cal.run_hint", lang()))
-        ))
+        return(
+          empty_state("cal.empty_title", "cal.empty_body", lang(), icon = "chart")
+        )
       }
       res <- state$result
       shiny::tagList(
@@ -293,7 +292,11 @@ mod_calibration_server <- function(id, lang, theme, active, session_dir,
               download_button(ns("download_pdf"), "common.download_pdf", lang())
             )
           ),
-          shiny::tags$div(class = "plot-wrap", shiny::plotOutput(ns("plot"), height = "420px")),
+          shiny::tags$div(
+            class = "plot-wrap",
+            `data-plot-alt` = tr("plot.alt.calibration", lang()),
+            shiny::plotOutput(ns("plot"), height = "420px")
+          ),
           section_card(
             "cal.quantiles_title", lang(),
             DT::DTOutput(ns("quantile_table"))
@@ -352,7 +355,7 @@ mod_calibration_server <- function(id, lang, theme, active, session_dir,
         ),
         class = "compact stripe"
       ) |>
-        DT::formatRound(columns = seq_len(ncol(df)), digits = 6)
+        DT::formatSignif(columns = seq_len(ncol(df)), digits = 4)
     })
 
     output$data_table <- DT::renderDT({
@@ -372,7 +375,7 @@ mod_calibration_server <- function(id, lang, theme, active, session_dir,
         ),
         class = "compact stripe"
       ) |>
-        DT::formatSignif(columns = 2:3, digits = 6)
+        DT::formatSignif(columns = seq_len(ncol(df)), digits = 4)
     })
 
     output$download_csv <- shiny::downloadHandler(

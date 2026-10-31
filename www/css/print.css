@@ -1,38 +1,75 @@
-/* Print stylesheet: hide navigation and controls, keep results readable. */
+/* Print stylesheet: hide chrome, keep results readable on paper. */
 
 @media print {
-  :root {
-    --bg: #FFFFFF;
-    --surface: #FFFFFF;
-    --surface-2: #F4F6F8;
-    --text: #10243E;
-    --text-muted: #48617A;
-    --border: #C9D4DF;
-    --plot-bg: #FFFFFF;
-    --plot-fg: #10243E;
-    --plot-grid: #DCE4EC;
-    --code-bg: #F4F6F8;
-    --code-fg: #10243E;
+  /* Every token that carries a dark-mode value must be reset here, otherwise
+     dark-mode printing paints dark text on dark surfaces. */
+  :root,
+  [data-bs-theme="dark"] {
+    --bg: #ffffff;
+    --canvas: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f5f5f7;
+    --text: #1d1d1f;
+    --text-muted: #6e6e73;
+    --border: #d2d2d7;
+    --border-strong: #6e6e73;
+    --divider: #e0e0e0;
+    --primary: #0066cc;
+    --primary-soft: #eef4fb;
+    --on-primary: #ffffff;
+    --accent: #7a3b00;
+    --accent-ink: #7a3b00;
+    --danger: #b3261e;
+    --danger-soft: #fdecea;
+    --ok: #1d7a46;
+
+    --focus: #0071e3;
+    --plot-bg: #ffffff;
+    --plot-fg: #1d1d1f;
+    --plot-grid: #e0e0e0;
+    --code-bg: #f5f5f7;
+    --code-fg: #1d1d1f;
+    --tile-1: #ffffff;
+
+    --tile-fg: #1d1d1f;
+    --tile-muted: #6e6e73;
+
+    --header-bg: #ffffff;
+    --subnav-bg: #ffffff;
+    --product-shadow: none;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
   }
 
   body {
-    background: #FFFFFF !important;
-    color: #10243E !important;
+    color: #1d1d1f !important;
     font-size: 11pt;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .app-header,
+  .sub-nav,
   .public-notice,
   .app-footer,
   .control-panel,
-  .page-header-icon,
   .result-toolbar,
+  .hint-text,
   .toast-region,
   .skip-link,
   .download-group,
   .export-controls,
   .copy-btn,
   .btn,
+  .run-row,
+  .help-toc,
+  .help-toc-mobile,
+  .table-scroll-hint,
+  .table-scroll-note,
+  .help-tip,
   .shiny-notification {
     display: none !important;
   }
@@ -42,33 +79,132 @@
     padding: 0;
   }
 
+  .help-layout {
+    display: block;
+    max-width: none;
+    padding: 0;
+  }
+
+  .help-layout .prose-card {
+    width: 100%;
+    margin: 0;
+  }
+
   .page-section[hidden] {
     display: none !important;
   }
 
-  .workbench-grid {
+  .page-hero {
+    background: #ffffff !important;
+    border: 0 !important;
+  }
+
+  .page-hero-inner {
+    max-width: none;
+    padding: 0 0 16pt;
+  }
+
+  .workbench-grid,
+  .about-grid {
     display: block;
+    max-width: none;
+    padding: 0;
   }
 
   .result-card,
   .card-block,
-  .prose-card {
+  .prose-card,
+  .about-card {
     box-shadow: none !important;
-    border: 1px solid #C9D4DF !important;
+    border: 1px solid #d2d2d7 !important;
     break-inside: avoid;
     page-break-inside: avoid;
   }
 
+  .empty-state {
+    background: #ffffff !important;
+    color: #1d1d1f !important;
+    border: 1px solid #d2d2d7 !important;
+    min-height: 0;
+    padding: 24pt;
+  }
+
+  .empty-title {
+    color: #1d1d1f !important;
+  }
+
+  .empty-body {
+    color: #6e6e73 !important;
+  }
+
   .page-title {
-    font-size: 18pt;
+    font-size: 22pt;
+  }
+
+  .page-desc {
+    font-size: 12pt;
+    color: #6e6e73 !important;
   }
 
   a {
-    color: #10243E !important;
+    color: #1d1d1f !important;
     text-decoration: underline;
   }
 
   .dataTables_scrollBody {
     max-height: none !important;
+  }
+  /* Result containers use two class names across modules; both must be
+     flattened or the panel keeps its screen padding and dark tile fill. */
+  .result-panel,
+  .result-panel-body {
+    background: #ffffff !important;
+    padding: 0 0 12pt;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Overflow containers clip content on paper. */
+  .table-scroll,
+  .dataTables_scroll,
+  .dataTables_scrollBody {
+    overflow: visible !important;
+    max-height: none !important;
+    width: 100% !important;
+  }
+
+  .table-scroll table,
+  .dataTables_scroll table {
+    width: 100% !important;
+    table-layout: auto !important;
+  }
+
+  /* Diagnostics are the reason a user prints: never truncate or nest-scroll. */
+  .detail-pre,
+  .alert-details {
+    max-height: none !important;
+    overflow: visible !important;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: #f5f5f7 !important;
+    color: #1d1d1f !important;
+  }
+
+  .alert-details > summary {
+    list-style: none;
+  }
+
+  .app-alert,
+  .app-alert-error,
+  .app-alert-info,
+  .app-alert-warn {
+    background: #ffffff !important;
+    color: #1d1d1f !important;
+    border: 1px solid #d2d2d7 !important;
+    box-shadow: none !important;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

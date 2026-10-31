@@ -46,14 +46,16 @@ set_plot_par <- function(colors) {
     cex.lab = 0.95,
     cex.main = 1.05,
     cex.sub = 0.78,
-    mgp = c(2.4, 0.6, 0)
+    mgp = c(2.4, 0.6, 0),
+    bty = "n",
+    tcl = -0.25
   )
 }
 
 plot_grid_lines <- function(colors, nx = 5, ny = 5) {
   graphics::abline(h = pretty(graphics::par("usr")[3:4], ny),
                    v = pretty(graphics::par("usr")[1:2], nx),
-                   col = colors$grid, lwd = 0.8)
+                   col = colors$grid, lwd = 0.6)
 }
 
 cal_parameter_note <- function(result, lang) {
@@ -90,19 +92,20 @@ draw_calibration <- function(result, lang = "en", theme = "light",
   if (show_density && show_cdf) {
     graphics::plot(
       x, y,
-      type = "l", col = colors$primary, lwd = 2,
+      type = "n",
       xlab = xlab, ylab = tr("plot.axis_density", lang),
       ylim = c(0, ymax * 1.08), xaxs = "i", yaxs = "i",
       main = title
     )
     plot_grid_lines(colors)
-    graphics::lines(x, y, col = colors$primary, lwd = 2)
+    graphics::lines(x, y, col = colors$primary, lwd = 2.2)
     graphics::par(new = TRUE)
     graphics::plot(
-      x, cdf, type = "l", col = colors$series[2], lwd = 1.8, lty = 2,
+      x, cdf, type = "n",
       axes = FALSE, xlab = "", ylab = "", ylim = c(0, 1),
       xaxs = "i", yaxs = "i"
     )
+    graphics::lines(x, cdf, col = colors$series[2], lwd = 2, lty = 2)
     graphics::axis(4, col = colors$fg, col.axis = colors$fg, las = 1,
                    cex.axis = 0.85)
     graphics::mtext(tr("plot.axis_cdf", lang), side = 4, line = 2.6,
@@ -111,28 +114,28 @@ draw_calibration <- function(result, lang = "en", theme = "light",
       "topright", legend = c(tr("plot.legend_density", lang),
                              tr("plot.legend_cdf", lang)),
       col = c(colors$primary, colors$series[2]), lty = c(1, 2),
-      lwd = c(2, 1.8), bty = "n", cex = 0.82, text.col = colors$fg
+      lwd = c(2.2, 2), bty = "n", cex = 0.82, text.col = colors$fg
     )
   } else if (show_cdf) {
     graphics::plot(
       x, cdf,
-      type = "l", col = colors$series[2], lwd = 2, lty = 2,
+      type = "n",
       xlab = xlab, ylab = tr("plot.axis_cdf", lang),
       ylim = c(0, 1), xaxs = "i", yaxs = "i",
       main = title
     )
     plot_grid_lines(colors)
-    graphics::lines(x, cdf, col = colors$series[2], lwd = 2, lty = 2)
+    graphics::lines(x, cdf, col = colors$series[2], lwd = 2.2, lty = 2)
   } else {
     graphics::plot(
       x, y,
-      type = "l", col = colors$primary, lwd = 2,
+      type = "n",
       xlab = xlab, ylab = tr("plot.axis_density", lang),
       ylim = c(0, ymax * 1.08), xaxs = "i", yaxs = "i",
       main = title
     )
     plot_grid_lines(colors)
-    graphics::lines(x, y, col = colors$primary, lwd = 2)
+    graphics::lines(x, y, col = colors$primary, lwd = 2.2)
   }
 
   if (isTRUE(quantile_note) && nrow(result$quantiles)) {
@@ -174,7 +177,7 @@ draw_marginal <- function(result, lang = "en", theme = "light",
 
   graphics::plot(
     beta[ok], y[ok],
-    type = "b", pch = 19, col = colors$primary, lwd = 2, cex = 0.85,
+    type = "n",
     xlab = tr("plot.axis_beta", lang),
     ylab = tr("plot.axis_mean_logl", lang),
     ylim = c(rng[1] - pad, rng[2] + pad), xlim = c(0, 1),
@@ -182,7 +185,9 @@ draw_marginal <- function(result, lang = "en", theme = "light",
     main = tr("plot.title.marginal", lang)
   )
   plot_grid_lines(colors)
-  graphics::lines(beta[ok], y[ok], col = colors$primary, lwd = 2)
+  graphics::lines(beta[ok], y[ok], col = colors$primary, lwd = 2.2)
+  graphics::points(beta[ok], y[ok], pch = 19, col = colors$primary,
+                   cex = 0.75)
   if (any(result$per_beta$se_warning %in% TRUE)) {
     bad <- ok & result$per_beta$se_warning %in% TRUE
     graphics::points(beta[bad], y[bad], pch = 1, cex = 1.3,
