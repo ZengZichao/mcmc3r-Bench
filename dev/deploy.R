@@ -83,6 +83,17 @@ if (nzchar(client_id) && nzchar(client_secret)) {
 # Connect content item under a near-identical name, and rsconnect then picks a
 # record by name. Refuse to guess which one is canonical.
 existing <- tryCatch(rsconnect::deployments(root), error = function(e) NULL)
+if (is.data.frame(existing) && nrow(existing) == 1L) {
+  # Reuse the recorded app name. Passing a different appName makes rsconnect
+  # treat this as a new application and create a second piece of content
+  # instead of updating the one the README links to.
+  recorded_name <- existing$name[[1]]
+  if (!identical(recorded_name, app_name)) {
+    message("Using recorded app name '", recorded_name,
+            "' instead of the default '", app_name, "'.")
+    app_name <- recorded_name
+  }
+}
 if (is.data.frame(existing) && nrow(existing) > 1L) {
   stop("Multiple deployment records exist for this directory (",
        paste(existing$name, collapse = ", "), "). rsconnect would pick one ",
