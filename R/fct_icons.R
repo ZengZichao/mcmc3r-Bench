@@ -35,16 +35,3 @@ icon_svg <- function(name, size = 18, class = "icon") {
   )
 }
 
-brand_svg <- function() {
-  paste0(
-    '<svg class="brand-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true" focusable="false">',
-    '<path d="M24 40V22" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
-    '<path d="M24 24 14 15M24 24l10-9M24 32l-7-6M24 32l7-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-    '<circle cx="14" cy="15" r="3.2" fill="currentColor"/>',
-    '<circle cx="34" cy="15" r="3.2" fill="currentColor"/>',
-    '<circle cx="17" cy="26" r="2.6" fill="currentColor"/>',
-    '<circle cx="31" cy="26" r="2.6" fill="currentColor"/>',
-    '<path d="M8 40c4-6 9-8 16-8s12 2 16 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 4"/>',
-    '</svg>'
-  )
-}

@@ -20,13 +20,12 @@ field_label <- function(key, lang = "en", help_key = NULL) {
   )
 }
 
-page_header <- function(title_key, desc_key, lang = "en") {
+page_header <- function(title_key, lang = "en") {
   shiny::tags$div(
     class = "page-hero",
     shiny::tags$div(
       class = "page-hero-inner",
-      shiny::tags$h1(class = "page-title", tr_span(title_key, lang)),
-      shiny::tags$p(class = "page-desc", tr_span(desc_key, lang))
+      shiny::tags$h1(class = "page-title", tr_span(title_key, lang))
     )
   )
 }
@@ -191,7 +190,7 @@ section_card <- function(title_key, lang = "en", ..., class = "card-block",
     class = class,
     shiny::tags$div(
       class = "card-head",
-      shiny::tags$h2(class = "card-title", tr_span(title_key, lang)),
+      shiny::tags$h3(class = "card-title", tr_span(title_key, lang)),
       toolbar
     ),
     ...
@@ -203,10 +202,50 @@ collapsible_advanced <- function(..., lang = "en", open = FALSE) {
     class = "advanced-block",
     open = if (isTRUE(open)) NA else NULL,
     shiny::tags$summary(
-      shiny::HTML(icon_svg("chevron", size = 15)),
-      tr_span("common.advanced", lang)
+      tr_span("common.advanced", lang),
+      shiny::HTML(icon_svg("chevron", size = 14))
     ),
     ...
+  )
+}
+
+# Export settings used to sit in the result toolbar as a radio pair plus a
+# resolution picker, which forced two decisions before every download. They now
+# live behind one disclosure with the print defaults already chosen.
+dt_language <- function(lang = "en") {
+  list(
+    emptyTable = tr("dt.empty", lang),
+    zeroRecords = tr("dt.no_records", lang),
+    lengthMenu = tr("dt.length_menu", lang),
+    paginate = list(previous = tr("dt.previous", lang),
+                    `next` = tr("dt.next", lang))
+  )
+}
+
+export_options <- function(ns, lang = "en") {
+  shiny::tags$details(
+    class = "export-options",
+    shiny::tags$summary(
+      tr_span("common.export_options", lang),
+      shiny::HTML(icon_svg("chevron", size = 14))
+    ),
+    shiny::tags$div(
+      class = "export-options-body",
+      shiny::radioButtons(
+        ns("export_theme"),
+        label = tr_span("common.export_theme", lang),
+        choices = export_theme_choices(lang),
+        selected = "print",
+        inline = TRUE
+      ),
+      shiny::selectInput(
+        ns("dpi"),
+        label = tr_span("common.dpi", lang),
+        choices = c("150" = 150, "300" = 300),
+        selected = 150,
+        width = "100%"
+      )
+    )
   )
 }
 

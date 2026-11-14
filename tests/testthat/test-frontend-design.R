@@ -34,22 +34,23 @@ test_that("the run button is reachable at every desktop width", {
     res$result$value
   }
 
-  # 901-1068px is where the sub-nav stays visible while the run row used to be
-  # pinned using the sub-nav-hidden offset, which hid the primary action.
+  # 901-1068px is the narrowest desktop band: the sticky run row must clear the
+  # only sticky chrome left, the header, or the primary action hides behind it.
   probe <- paste(
     "(function(){",
     "window.scrollTo(0, 900);",
     "var page = document.querySelector('.page-section:not([hidden])');",
     "var rr = page && page.querySelector('.run-row');",
     "if (!rr) return JSON.stringify({ skip: true });",
-    "var sn = document.querySelector('.sub-nav');",
+    "var sn = document.querySelector('.app-header');",
+    "if (!sn) return JSON.stringify({ skip: true });",
     "var btn = rr.querySelector('button');",
     "var b = btn.getBoundingClientRect();",
     "var hit = document.elementFromPoint(Math.round(b.left + b.width / 2),",
     "                                    Math.round(b.top + b.height / 2));",
     "return JSON.stringify({",
     "  width: window.innerWidth,",
-    "  subnavBottom: sn.getBoundingClientRect().bottom,",
+    "  chromeBottom: sn.getBoundingClientRect().bottom,",
     "  runRowTop: rr.getBoundingClientRect().top,",
     "  clickable: !!(hit && (hit === btn || btn.contains(hit)))",
     "});})()"
@@ -63,7 +64,7 @@ test_that("the run button is reachable at every desktop width", {
     Sys.sleep(3)
     raw <- jsonlite::fromJSON(js(probe))
     if (isTRUE(raw$skip)) next
-    expect_gte(as.numeric(raw$runRowTop), as.numeric(raw$subnavBottom))
+    expect_gte(as.numeric(raw$runRowTop), as.numeric(raw$chromeBottom))
     expect_true(isTRUE(raw$clickable), info = paste("width", width))
   }
 })

@@ -1,14 +1,12 @@
 key,en,zh
-about.attribution_heading,Authors and contributions,作者与贡献
+about.attribution_heading,Author and project,作者与项目
 about.author,Author and maintainer,作者与维护者
 about.build,Build date,构建日期
-about.built_on,"Built on mcmc3r by Mario dos Reis, Sandra Alvarez-Carretero, and contributors (MIT).",基于 Mario dos Reis、Sandra Alvarez-Carretero 及贡献者开发的 mcmc3r（MIT）。
 about.citation,Citation,引用
 about.citation_heading,How to cite,如何引用
 about.citation_text,Zeng Z. (2026). mcmc3r Bench (Version 0.1.0) [Computer software]. https://github.com/ZengZichao/mcmc3r-Bench,曾子超. (2026). mcmc3r Bench（版本 0.1.0）[计算机软件]. https://github.com/ZengZichao/mcmc3r-Bench
 about.code_license,Code licence,代码许可
 about.data_note,This app does not create accounts and does not store uploaded data beyond the current session.,本应用不创建账号，也不会在当前会话结束后保留上传数据。
-about.description,"Version, authorship, upstream attribution, licences, and citation.",版本、作者、上游贡献、许可与引用。
 about.disclaimer,"Unofficial GUI; not affiliated with or endorsed by the mcmc3r authors, MCMCtree, or BPP.",非官方图形界面；与 mcmc3r 作者、MCMCtree、BPP 无隶属或背书关系。
 about.disclaimer_heading,Disclaimer,免责声明
 about.doc_license,Documentation licence,文档许可
@@ -17,37 +15,31 @@ about.docs_en,English documentation,英文文档
 about.docs_zh,Chinese documentation,中文文档
 about.email,Contact,联系邮箱
 about.font_license,Font licence,字体许可
-about.framework,Framework,框架
-about.framework_value,"R Shiny, bslib, DT, data.table, showtext",R Shiny、bslib、DT、data.table、showtext
-about.independent,"mcmc3r Bench is an independent, unofficial GUI by Zeng Zichao (曾子超).",mcmc3r 实验台是由曾子超开发的独立、非官方图形界面。
+about.independent,"mcmc3r Bench is an independent, unofficial GUI by Zeng Zichao.",mcmc3r Bench 是由曾子超开发的独立、非官方图形界面。
 about.issue,Report an issue,报告问题
-about.license_heading,Licences and attribution,许可与署名
-about.methods_note,"If results from this app are used in a publication, cite the underlying methods and the mcmc3r package; cite the GUI as software.",若论文使用本应用的结果，请引用对应方法论文与 mcmc3r 包；本图形界面仅作为软件引用。
-about.no_endorsement,"The upstream authors did not participate in the design, implementation, or deployment of this GUI.",上游作者未参与本图形界面的设计、实现或部署。
+about.license_heading,Licences,许可
+about.methods_note,"When publishing results, cite the methods, the mcmc3r package, and this GUI.",发表结果时，请引用所用方法、mcmc3r 包与本图形界面。
 about.notice,NOTICE,NOTICE
 about.orcid,ORCID iD,ORCID iD
 about.repo,GitHub repository,GitHub 仓库
-about.tech_heading,Implementation,实现
 about.third_party,Third-party licences,第三方许可
 about.title,About,关于
 about.upstream,Upstream package,上游包
-about.upstream_authors,Upstream authors,上游作者
+about.upstream_authors,Authors,作者
+about.upstream_repo,Repository,代码仓库
 about.upstream_sha,Pinned commit,锁定 commit
-about.upstream_version,Upstream version,上游版本
+about.upstream_version,Version,版本
 about.version,Version,版本
-app.meta_description,"mcmc3r Bench: an independent, unofficial bilingual Shiny GUI for mcmc3r calibrations, MCMC summaries, and marginal likelihoods.","mcmc3r Bench:独立的非官方双语 Shiny 图形界面,用于 mcmc3r 校准分布、MCMC 汇总与边际似然估计。"
-app.name,mcmc3r Bench,mcmc3r 实验台
-app.tagline,An unofficial bilingual GUI for mcmc3r,mcmc3r 的非官方双语图形界面
-app.title,mcmc3r Bench — an unofficial bilingual GUI for mcmc3r,mcmc3r 实验台 — mcmc3r 的非官方双语图形界面
+app.meta_description,"mcmc3r Bench: an independent, unofficial bilingual Shiny GUI for mcmc3r calibrations, MCMC summaries, and marginal likelihoods.",mcmc3r Bench 是独立、非官方的双语 Shiny 图形界面，用于 mcmc3r 的校准分布、MCMC 汇总与边际似然估计。
+app.name,mcmc3r Bench,mcmc3r Bench
+app.title,mcmc3r Bench — an unofficial bilingual GUI for mcmc3r,mcmc3r Bench — mcmc3r 的非官方双语图形界面
 cal.c,Tail decay c,尾部衰减 c
 cal.controls,Parameters,参数
 cal.copy_syntax,Copy syntax,复制语法
-cal.data_note,"The table contains the plotted x values, density, and CDF. Non-finite boundary values are left blank.",表格包含绘图的 x 值、密度与累积概率；边界处的非有限值留空。
-cal.data_preview_note,Showing the first {n} rows.,显示前 {n} 行。
+cal.data_preview_note,Showing the first {n} of {total} rows.,显示前 {n} 行，共 {total} 行。
 cal.data_title,Plot data,绘图数据
-cal.description,"Explore MCMCtree L, B, and U calibration densities, read quantiles, and copy ready-to-use syntax.",探索 MCMCtree 的 L、B、U 校准分布，读取分位数并复制可直接使用的语法。
-cal.empty_body,"Choose L, B, or U, adjust the parameters, then press Run to see the density, quantiles, and MCMCtree syntax.",选择 L、B 或 U，调整参数后点击“运行”，即可查看密度、分位数与 MCMCtree 语法。
-cal.empty_title,Configure a calibration and run,设置校准参数并运行
+cal.empty_body,"Set the bounds, then run.",设置边界后运行。
+cal.empty_title,No plot yet,尚未绘图
 cal.help.c,Tail decay parameter of the truncated Cauchy distribution.,截断柯西分布的尾部衰减参数。
 cal.help.p,Mode parameter of the truncated Cauchy distribution.,截断柯西分布的众数参数。
 cal.help.pL,Probability mass assigned to the lower soft bound.,分配给下软边界的概率。
@@ -68,13 +60,11 @@ cal.quantile_value,Quantile (Ma),分位数（Ma）
 cal.quantiles_title,Quantiles,分位数
 cal.reset_done,Calibration inputs were reset.,校准参数已重置。
 cal.results,Results,结果
-cal.run_hint,Results update only when you press Run.,结果仅在你点击“运行”后更新。
 cal.running,Computing calibration…,正在计算校准分布…
 cal.show_cdf,Cumulative probability,累积概率
 cal.show_density,Density,概率密度
-cal.show_options,Show,显示
-cal.summary_note,Density values are computed with mcmc3r::dL/dB/dU; quantiles with qL/qB/qU.,密度由 mcmc3r::dL/dB/dU 计算，分位数由 qL/qB/qU 计算。
-cal.syntax_note,Copy this string into an MCMCtree control file.,可将该字符串直接复制到 MCMCtree 控制文件。
+cal.show_options,Display,显示
+cal.syntax_note,Paste into a MCMCtree control file.,粘贴到 MCMCtree 控制文件中。
 cal.syntax_title,MCMCtree syntax,MCMCtree 语法
 cal.tL,Minimum age tL (Ma),最小年龄 tL（Ma）
 cal.tU,Maximum age tU (Ma),最大年龄 tU（Ma）
@@ -84,7 +74,8 @@ cal.type.B,Joint bounds (B),联合边界（B）
 cal.type.L,Minimum bound (L),最小边界（L）
 cal.type.U,Maximum bound (U),最大边界（U）
 cal.xmax,X-axis maximum (Ma),X 轴上限（Ma）
-cal.xmax.auto,Automatic,自动
+cal.xmax.auto,Auto,自动
+cal.xmax.auto_note,X-axis upper limit set to {x} Ma.,X 轴上限已设为 {x} Ma。
 common.advanced,Advanced,高级
 common.browse,Browse…,浏览…
 common.close,Close,关闭
@@ -99,7 +90,8 @@ common.download_png,Download PNG,下载 PNG
 common.dpi,Resolution,分辨率
 common.empty,Nothing to show yet.,暂无可显示内容。
 common.error,Error,错误
-common.export_theme,Export theme,导出主题
+common.export_options,Export options,导出选项
+common.export_theme,Theme,主题
 common.hint,Suggestion,建议
 common.issues,Issues,问题反馈
 common.language,Language,语言
@@ -108,7 +100,7 @@ common.menu,Menu,菜单
 common.no,No,否
 common.no_file,No file selected,未选择文件
 common.noscript,This application requires JavaScript to run.,本应用需要启用 JavaScript 才能运行。
-common.public_notice,"Public app: do not upload confidential, personal, or regulated data.",公开应用：请勿上传机密、个人或受管制数据。
+common.public_notice,"Do not upload confidential, personal, or regulated data.",请勿上传机密、个人或受管制数据。
 common.reset,Reset,重置
 common.run,Run,运行
 common.skip,Skip to main content,跳到主要内容
@@ -116,7 +108,10 @@ common.table_scroll,Scroll horizontally to see all columns.,左右滑动查看�
 common.warning,Warning,警告
 common.yes,Yes,是
 dt.empty,No data available,暂无数据
+dt.length_menu,Show _MENU_ entries,显示 _MENU_ 条
+dt.next,Next,下一页
 dt.no_records,No matching records,无匹配记录
+dt.previous,Previous,上一页
 err.CAL-001,The minimum age tL must be greater than 0.,最小年龄 tL 必须大于 0。
 err.CAL-002,The tail decay c must be greater than 0.,尾部衰减 c 必须大于 0。
 err.CAL-003,The mode parameter p must be 0 or greater.,众数参数 p 必须大于或等于 0。
@@ -140,7 +135,7 @@ err.MCMC-004,Some time columns contain non-numeric values.,部分时间列包含
 err.MCMC-005,The file is too large or contains too many rows.,文件过大或行数超限。
 err.MCMC-006,Duplicate column names were found.,发现重复的列名。
 err.MCMC-007,Too many non-finite values; the time series cannot be summarised.,非有限值过多，无法汇总时间序列。
-err.MCMC-008,"Removed {n} row(s) containing NA, NaN, or infinite time values.",已删除 {n} 行包含 NA、NaN 或无穷大的时间记录。
+err.MCMC-008,"Rows with NA, NaN, or infinite time values were removed ({n}).",已移除含 NA、NaN 或无穷大时间值的行（{n} 行）。
 err.ML-001,beta.txt could not be read as a numeric vector.,beta.txt 无法读取为数值向量。
 err.ML-002,"A beta value is outside the allowed range, or beta = 1 is present.",beta 值超出允许范围，或包含 beta = 1。
 err.ML-003,Beta values must be strictly increasing.,beta 值必须严格递增。
@@ -162,16 +157,13 @@ err.detail_hidden,Technical details,技术详情
 err.open_help,Open help,打开帮助
 err.title,Something went wrong,出现问题
 footer.citation,Citation,引用
-footer.copyright,© 2026 mcmc3r Bench,© 2026 mcmc3r 实验台
-footer.docs,Documentation,文档
-footer.explore,Explore,探索
+footer.copyright,© 2026 mcmc3r Bench,© 2026 mcmc3r Bench
+footer.explore,Explore,浏览
 footer.github,GitHub,GitHub
 footer.legal,Legal,法律
-footer.license,License,许可
+footer.license,Licence,许可
 footer.privacy,Privacy,隐私
 footer.resources,Resources,资源
-footer.upstream,Upstream,上游
-help.description,"Quick start, methods, file formats, error codes, privacy, and citation.",快速开始、方法、文件格式、错误码、隐私与引用。
 help.title,Help,帮助
 help.toc,On this page,本页目录
 hint.CAL-001,Enter a positive minimum age.,请输入大于 0 的最小年龄。
@@ -216,20 +208,18 @@ mcmc.auto,Auto-detect,自动识别
 mcmc.ci_high,95% CI upper,95% 区间上限
 mcmc.ci_low,95% CI lower,95% 区间下限
 mcmc.columns,Columns,列数
-mcmc.controls,Input and options,输入与选项
+mcmc.controls,Input,输入
 mcmc.custom_prefix,Custom prefix,自定义前缀
 mcmc.custom_prefix_help,Only columns whose names start with this prefix are summarised.,仅汇总名称以此前缀开头的列。
-mcmc.description,"Upload an MCMCtree or BPP mcmc.txt file and summarise node ages with means, medians, and 95% intervals.",上传 MCMCtree 或 BPP 的 mcmc.txt，汇总节点年龄的均值、中位数与 95% 区间。
 mcmc.diagnostics,Diagnostics,诊断信息
-mcmc.download_note,"CSV columns use stable English names so the file can be reused in R, Python, or Excel.",CSV 列名使用稳定的英文名称，便于在 R、Python 或 Excel 中复用。
-mcmc.empty_body,"The app detects t_ (MCMCtree) or tau_ (BPP) columns, removes non-finite rows, and reports every change.",应用会自动识别 t_（MCMCtree）或 tau_（BPP）列，删除非有限行并报告处理结果。
-mcmc.empty_title,Upload a file or load an example,上传文件或载入示例
-mcmc.example,Example data,示例数据
-mcmc.example.carnivores,"Carnivores (MCMCtree, t_)",Carnivores（MCMCtree，t_）
-mcmc.example.hominids,"Hominids (BPP, tau_)",Hominids（BPP，tau_）
-mcmc.example.microcebus,"Microcebus (BPP, tau_)",Microcebus（BPP，tau_）
+mcmc.download_note,"English column names, ready to reuse in R, Python, or Excel.",英文列名，便于在 R、Python 或 Excel 中继续使用。
+mcmc.empty_body,Upload an mcmc.txt or load an example.,上传 mcmc.txt 或载入示例。
+mcmc.empty_title,No chain file loaded,尚未载入链文件
+mcmc.example,Examples,示例
+mcmc.example.carnivores,Carnivores (MCMCtree),Carnivores（MCMCtree）
+mcmc.example.hominids,Hominids (BPP),Hominids（BPP）
+mcmc.example.microcebus,Microcebus (BPP),Microcebus（BPP）
 mcmc.example_loaded,Loaded example: {name},已载入示例：{name}
-mcmc.example_note,Examples come from the mcmc3r package data and are processed in memory.,示例来自 mcmc3r 包内置数据，仅在内存中处理。
 mcmc.file,File,文件
 mcmc.file_size,File size,文件大小
 mcmc.in_memory,in-memory,内存数据
@@ -243,7 +233,7 @@ mcmc.parsed,File parsed successfully.,文件解析成功。
 mcmc.prefix.custom,Custom prefix,自定义前缀
 mcmc.prefix.t,t_ (MCMCtree),t_（MCMCtree）
 mcmc.prefix.tau,tau_ (BPP),tau_（BPP）
-mcmc.prefix_help,Time columns are matched with a strict prefix (^t_ or ^tau_).,时间列使用严格前缀匹配（^t_ 或 ^tau_）。
+mcmc.prefix_help,Only columns whose names start with this prefix are summarised (^t_ or ^tau_).,仅汇总名称以此前缀开头的列（^t_ 或 ^tau_）。
 mcmc.preview,Column preview,列预览
 mcmc.preview_note,Showing the first {cols} columns and {rows} rows.,显示前 {cols} 列、前 {rows} 行。
 mcmc.reset_done,MCMC Summary was reset.,MCMC 汇总已重置。
@@ -252,95 +242,83 @@ mcmc.rows_in,Rows read,读取行数
 mcmc.rows_removed,Rows removed,删除行数
 mcmc.rows_used,Rows used,使用行数
 mcmc.run,Summarise,汇总
-mcmc.run_hint,Press Summarise after loading a file.,载入文件后点击“汇总”。
+mcmc.run_hint,Load a file first.,请先载入文件。
 mcmc.sep_comma,comma,逗号
 mcmc.sep_space,whitespace,空白
 mcmc.sep_tab,tab,制表符
 mcmc.separator,Separator,分隔符
-mcmc.separator_help,Auto-detection normally works; choose a separator if columns are merged or split incorrectly.,通常自动识别即可；若列被错误合并或拆分，请手动选择分隔符。
-mcmc.show_preview,Show column preview,显示列预览
+mcmc.separator_help,Auto-detection usually works; set a separator only if columns merge or split.,通常自动识别即可；仅在列被错误合并或拆分时手动选择。
 mcmc.summary,Summary statistics,汇总统计
-mcmc.summary_note,The summary is computed directly from the selected time columns; equivalent to mcmc3r::mcmc.sum for multi-column inputs.,汇总直接基于选中的时间列计算；对多列输入与 mcmc3r::mcmc.sum 等价。
 mcmc.time_columns,Time columns,时间列数
 mcmc.time_prefix,Time column prefix,时间列前缀
 mcmc.title,MCMC Summary,MCMC 汇总
 mcmc.upload,Upload mcmc.txt,上传 mcmc.txt
-mcmc.upload_help,"Whitespace, tab, or comma separated. UTF-8 or ASCII. Maximum 50 MB.",支持空白、制表符或逗号分隔；UTF-8 或 ASCII；最大 50 MB。
+mcmc.upload_help,"UTF-8 or ASCII, up to 50 MB.",UTF-8 或 ASCII，最大 50 MB。
 mcmc.uploading,Reading file…,正在读取文件…
-ml.app_label,App,应用
 ml.beta_a,Exponent a (stepping stones),指数 a（步进采样）
-ml.beta_a_help,Values between 5 and 8 are typically appropriate; larger values concentrate points near zero.,通常取 5 到 8；数值越大，点越集中在 0 附近。
+ml.beta_a_help,5 to 8 is the usual range; larger values concentrate points near zero.,通常取 5 到 8；数值越大，点越集中在 0 附近。
 ml.beta_col,Beta,Beta
 ml.beta_download,Download beta.txt,下载 beta.txt
 ml.beta_file,Beta file,Beta 文件
 ml.beta_generate,Generate beta values,生成 beta 值
 ml.beta_generated_note,Generated {n} beta values with {method}.,已使用 {method} 生成 {n} 个 beta 值。
 ml.beta_n,Number of beta points,Beta 点数
-ml.beta_note,"Step-stones beta values may include 0; it is converted to 1e-300 when written, matching the upstream convention. beta = 1 is never accepted.",步进采样的 beta 可包含 0；写入时按上游约定转换为 1e-300。beta = 1 一律不接受。
+ml.beta_note,Stepping stones: 0 ≤ beta < 1. Gauss–Legendre: 0 < beta < 1. beta = 1 is rejected.,步进采样：0 ≤ beta < 1；高斯–勒让德：0 < beta < 1。不接受 beta = 1。
 ml.beta_required,Provide beta values or generate them.,请提供 beta 值或先生成。
 ml.beta_source,Beta source,Beta 来源
 ml.beta_upload,Upload beta.txt,上传 beta.txt
 ml.beta_upload_help,"A plain text file with one numeric beta per line, no header.",纯文本文件，每行一个数值，无表头。
-ml.beta_zero_note,{n} beta value(s) equal to 0 were written as 1e-300.,{n} 个等于 0 的 beta 已按约定写为 1e-300。
-ml.bundle_download,Bundle (ZIP),打包下载（ZIP）
+ml.beta_zero_note,Beta values equal to 0 are exported as 1e-300.,等于 0 的 beta 在导出时写作 1e-300。
+ml.bundle_download,ZIP bundle,ZIP 打包
 ml.chain_files,Individual mcmc.txt files,单独的 mcmc.txt 文件
 ml.chain_required,Provide a ZIP archive or individual chain files.,请提供 ZIP 压缩包或单独的链文件。
-ml.chain_selection_note,Files are ordered naturally by the first number in their file name.,文件按文件名中的第一个数字进行自然排序。
+ml.chain_selection_note,Files are sorted by the first number in each name.,按每个文件名中的第一个数字排序。
 ml.chain_source,Chain input,链输入方式
 ml.chain_zip,ZIP archive,ZIP 压缩包
 ml.chains,Power posterior chains,功率后验链
 ml.computed_at,Computed at,计算时间
-ml.controls,Method and inputs,方法与输入
-ml.demo,Load synthetic demo,载入合成示例
+ml.controls,Method and input,方法与输入
+ml.demo,Load demo,载入示例
+ml.demo_alert_title,Demo data in use,当前为示例数据
 ml.demo_loaded,Synthetic demo loaded.,合成示例已载入。
-ml.demo_synthetic_note,The demo is synthetic and is provided only to illustrate the workflow; it is not a published analysis.,该示例为合成数据，仅用于演示流程，并非已发表分析。
-ml.description,Estimate log marginal likelihoods from power posterior chains with stepping stones or Gauss–Legendre quadrature.,基于功率后验链，使用步进采样或高斯–勒让德求积估计对数边际似然。
+ml.demo_synthetic_note,"Results are computed from synthetic chains, not your upload.",结果由合成链计算，并非你的上传数据。
 ml.detail_download,Per-beta CSV,明细 CSV
 ml.detail_title,Per-beta details,各 beta 明细
-ml.empty_body,"Use a ZIP with beta.txt and numbered folders 1/mcmc.txt … n/mcmc.txt, or select the chain files individually.",使用包含 beta.txt 与 1/mcmc.txt … n/mcmc.txt 编号目录的 ZIP，或逐个选择链文件。
-ml.empty_title,Upload power posterior chains to estimate a marginal likelihood,上传功率后验链以计算边际似然
-ml.example_zip_note,Demo only: synthetic chains with known beta values.,仅为演示：带已知 beta 值的合成链。
+ml.empty_body,Upload a ZIP or select chain files.,上传 ZIP 或选择链文件。
+ml.empty_title,No chains loaded,尚未载入链数据
+ml.example_zip_note,Synthetic chains with known beta values.,带已知 beta 值的合成链。
 ml.generate,Generate,生成
-ml.generated_for_download,Generated beta values are for download only in ZIP mode; the ZIP beta.txt is authoritative.,在 ZIP 模式下，生成的 beta 仅用于下载；以 ZIP 内的 beta.txt 为准。
-ml.limits,"Limits: up to {ss} beta points for stepping stones, {gq} for Gauss–Legendre (hard maximum {gauss}), and {chains} chains.",上限：步进采样最多 {ss} 个 beta 点，高斯–勒让德 {gq} 个（硬上限 {gauss}），最多 {chains} 条链。
-ml.logml,log marginal likelihood,对数边际似然
+ml.generated_for_download,"In ZIP mode, beta.txt is read from the archive.",ZIP 模式下，beta.txt 从压缩包中读取。
+ml.logml,Log marginal likelihood,对数边际似然
 ml.mean_logl,Mean logL,平均对数似然
-ml.meta_note,Downloads include app/upstream versions and the screen/export theme for reproducibility.,下载内容包含应用与上游版本、屏幕/导出主题，便于复现。
 ml.method,Method,方法
 ml.method.gq,Gauss–Legendre quadrature,高斯–勒让德求积
 ml.method.ss,Stepping stones,步进采样法
-ml.method_gq_help,"beta must satisfy 0 < beta < 1, be strictly increasing, and match the n-point Gauss–Legendre rule.",beta 必须满足 0 < beta < 1、严格递增，并与 n 点高斯–勒让德规则一致。
-ml.method_help,Stepping stones is the common choice; Gauss–Legendre requires beta values from the n-point rule.,步进采样法较常用；高斯–勒让德要求 beta 与 n 点规则一致。
+ml.method_help,Stepping stones is the usual choice; Gauss–Legendre needs beta values from the n-point rule.,步进采样法较常用；高斯–勒让德要求 beta 与 n 点规则一致。
 ml.method_label,Method,方法
-ml.method_ss_help,beta must satisfy 0 ≤ beta < 1 and be strictly increasing. A value of 1 is appended automatically.,beta 必须满足 0 ≤ beta < 1 且严格递增；1 会由程序自动追加。
-ml.model,Model name,模型名
+ml.model,Model,模型
 ml.model_name_default,Untitled model,未命名模型
 ml.model_placeholder,e.g. strict clock,例如：strict clock
 ml.n_beta,Beta points,Beta 点数
 ml.n_rows,Rows,行数
 ml.no_data,No chains have been loaded.,尚未载入链数据。
-ml.plot_title,Mean log-likelihood by beta,平均对数似然随 beta 变化
 ml.reset_done,Marginal Likelihood was reset.,边际似然模块已重置。
-ml.result_note,"logML and SE are produced by mcmc3r; the GUI adds validation, reproducible metadata, and exports.",logML 与 SE 由 mcmc3r 计算；图形界面负责校验、可复现元数据与导出。
 ml.results,Results,结果
 ml.run,Estimate,计算
-ml.run_hint,"Choose a method, provide beta values and chains, then press Estimate.",选择方法、提供 beta 与链文件后点击“计算”。
 ml.se,Standard error,标准误
 ml.se_warning,SE warning,SE 警告
 ml.status_se_reliable,Reliable,可靠
 ml.status_se_unreliable,Unreliable,不可靠
 ml.summary_download,Summary CSV,总表 CSV
-ml.summary_note,Stepping stones appends beta = 1 internally; the reported beta values exclude it.,步进采样内部会追加 beta = 1；结果中报告的 beta 不含该值。
+ml.summary_note,Stepping stones adds the beta = 1 point; the table lists input values only.,步进采样会追加 beta = 1 这一点；表中只列出输入值。
 ml.title,Marginal Likelihood,边际似然
 ml.upload_files,Select chain files,选择链文件
 ml.upload_zip,Upload chain ZIP,上传链结果 ZIP
-ml.upstream,Upstream,上游
 ml.warning_se,The standard error may be unreliable.,标准误可能不可靠。
 ml.warning_se_detail,The upstream approximation flagged var(r_k)/r_k² > 0.1 for at least one beta. Consider longer chains or more beta points.,上游近似在至少一个 beta 上标记 var(r_k)/r_k² > 0.1。建议延长链或增加 beta 点数。
-ml.zip_structure_help,"beta.txt and numbered folders 1…n, each containing mcmc.txt. One optional outer folder is allowed.",beta.txt 与编号目录 1…n，每个目录包含 mcmc.txt。允许外层再套一个目录。
+ml.zip_structure_help,"The ZIP needs beta.txt and folders 1…n, each holding mcmc.txt.",ZIP 内需包含 beta.txt 与 1…n 号文件夹，每个文件夹含 mcmc.txt。
 nav.about,About,关于
-nav.breadcrumb,Breadcrumb and page resources,面包屑与页面资源
-nav.calibration,Calibration Explorer,校准分布探索
+nav.calibration,Calibration,校准
 nav.help,Help,帮助
 nav.marginal,Marginal Likelihood,边际似然
 nav.mcmc,MCMC Summary,MCMC 汇总
@@ -352,23 +330,18 @@ plot.axis_cdf,Cumulative probability,累积概率
 plot.axis_density,Density,概率密度
 plot.axis_mean_logl,Mean log-likelihood,平均对数似然
 plot.axis_time,Time (Ma),时间（Ma）
-plot.legend_cdf,Cumulative probability,累积概率
-plot.legend_density,Density,概率密度
-plot.params.B,tL = {tL} Ma · tU = {tU} Ma · pL = {pL} · pU = {pU},tL = {tL} Ma · tU = {tU} Ma · pL = {pL} · pU = {pU}
-plot.params.L,tL = {tL} Ma · p = {p} · c = {c} · pL = {pL},tL = {tL} Ma · p = {p} · c = {c} · pL = {pL}
-plot.params.U,tU = {tU} Ma · pU = {pU},tU = {tU} Ma · pU = {pU}
-plot.title.calibration,Calibration density,校准分布
+plot.params.B,"tL = {tL} Ma, tU = {tU} Ma, pL = {pL}, pU = {pU}","tL = {tL} Ma, tU = {tU} Ma, pL = {pL}, pU = {pU}"
+plot.params.L,"tL = {tL} Ma, p = {p}, c = {c}, pL = {pL}","tL = {tL} Ma, p = {p}, c = {c}, pL = {pL}"
+plot.params.U,"tU = {tU} Ma, pU = {pU}","tU = {tU} Ma, pU = {pU}"
+plot.title.calibration_both,Calibration distribution,校准分布
+plot.title.calibration_cdf,Cumulative distribution,累积分布
+plot.title.calibration_density,Calibration density,校准密度
 plot.title.marginal,Mean log-likelihood by beta,平均对数似然随 beta 变化
-theme.dark,Dark,暗色
-theme.light,Light,亮色
-theme.print,Print theme (recommended),打印主题（推荐）
-theme.screen,Match screen theme,匹配屏幕主题
+theme.print,Print,打印
+theme.screen,Screen,屏幕
 theme.switch_to_dark,Switch to dark theme,切换到暗色主题
 theme.switch_to_light,Switch to light theme,切换到亮色主题
 toast.copied,Copied to clipboard,已复制到剪贴板
 toast.copy_failed,Could not copy to clipboard,无法复制到剪贴板
 toast.error,Error,错误
-toast.info,Notice,提示
-toast.lang_changed,Language switched,语言已切换
-toast.theme_changed,Theme switched,主题已切换
 toast.warn,Warning,警告

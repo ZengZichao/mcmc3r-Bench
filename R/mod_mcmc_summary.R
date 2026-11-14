@@ -77,7 +77,7 @@ mcmc_separator_label <- function(sep, lang = "en") {
 mod_mcmc_summary_ui <- function(id, lang = "en") {
   ns <- shiny::NS(id)
   shiny::tagList(
-    page_header("mcmc.title", "mcmc.description", lang),
+    page_header("mcmc.title", lang),
     shiny::tags$div(
       class = "workbench-grid",
       control_panel(
@@ -104,23 +104,6 @@ mod_mcmc_summary_ui <- function(id, lang = "en") {
           selected = "auto",
           width = "100%"
         ),
-        shiny::tags$div(
-          class = "example-block",
-          shiny::tags$span(class = "control-label", tr_span("mcmc.example", lang)),
-          shiny::tags$div(
-            class = "example-buttons",
-            shiny::actionButton(ns("ex_microcebus"),
-                                tr_span("mcmc.example.microcebus", lang),
-                                class = "btn btn-sm btn-utility"),
-            shiny::actionButton(ns("ex_hominids"),
-                                tr_span("mcmc.example.hominids", lang),
-                                class = "btn btn-sm btn-utility"),
-            shiny::actionButton(ns("ex_carnivores"),
-                                tr_span("mcmc.example.carnivores", lang),
-                                class = "btn btn-sm btn-utility")
-          ),
-          shiny::tags$p(class = "field-note", tr_span("mcmc.example_note", lang))
-        ),
         shiny::selectInput(
           ns("prefix"),
           label = field_label("mcmc.time_prefix", lang, "mcmc.prefix_help"),
@@ -137,12 +120,22 @@ mod_mcmc_summary_ui <- function(id, lang = "en") {
             width = "100%"
           )
         ),
-        shiny::checkboxInput(
-          ns("show_preview"),
-          label = tr_span("mcmc.show_preview", lang),
-          value = TRUE
-        ),
-        footer = shiny::tags$p(class = "panel-hint", tr_span("mcmc.run_hint", lang))
+        shiny::tags$div(
+          class = "example-block",
+          shiny::tags$span(class = "control-label", tr_span("mcmc.example", lang)),
+          shiny::tags$div(
+            class = "example-buttons",
+            shiny::actionButton(ns("ex_microcebus"),
+                                tr_span("mcmc.example.microcebus", lang),
+                                class = "btn btn-sm btn-utility"),
+            shiny::actionButton(ns("ex_hominids"),
+                                tr_span("mcmc.example.hominids", lang),
+                                class = "btn btn-sm btn-utility"),
+            shiny::actionButton(ns("ex_carnivores"),
+                                tr_span("mcmc.example.carnivores", lang),
+                                class = "btn btn-sm btn-utility")
+          )
+        )
       ),
       result_panel(
         title_key = "mcmc.results",
@@ -298,7 +291,6 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
       shiny::updateSelectInput(session, "prefix", selected = "auto")
       shiny::updateTextInput(session, "custom_prefix", value = "")
       shiny::updateSelectInput(session, "sep_choice", selected = "auto")
-      shiny::updateCheckboxInput(session, "show_preview", value = TRUE)
       session$sendCustomMessage("reset-input", ns("file"))
       notify(session, tr("mcmc.reset_done", lang()), type = "message")
     })
@@ -322,7 +314,7 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
         class = "card-block",
         shiny::tags$div(
           class = "card-head",
-          shiny::tags$h2(class = "card-title", tr_span("mcmc.diagnostics", lang()))
+          shiny::tags$h3(class = "card-title", tr_span("mcmc.diagnostics", lang()))
         ),
         diag_grid(list(
           list(label = tr("mcmc.file", lang()), value = file_label),
@@ -335,28 +327,23 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
         ))
       )
 
-      preview_card <- if (isTRUE(input$show_preview)) {
+      preview_card <- shiny::tags$div(
+        class = "card-block",
         shiny::tags$div(
-          class = "card-block",
-          shiny::tags$div(
-            class = "card-head",
-            shiny::tags$h2(class = "card-title", tr_span("mcmc.preview", lang()))
-          ),
-          shiny::tags$p(class = "note",
-                        tr("mcmc.preview_note", lang(),
-                           cols = min(ncol(state$data), 20),
-                           rows = min(nrow(state$data), 10))),
-          DT::DTOutput(ns("preview_table"))
-        )
-      } else {
-        NULL
-      }
+          class = "card-head",
+          shiny::tags$h3(class = "card-title", tr_span("mcmc.preview", lang()))
+        ),
+        shiny::tags$p(class = "note",
+                      tr("mcmc.preview_note", lang(),
+                         cols = min(ncol(state$data), 20),
+                         rows = min(nrow(state$data), 10))),
+        DT::DTOutput(ns("preview_table"))
+      )
 
       if (is.null(state$result)) {
         return(shiny::tagList(
           diagnostics_card,
-          preview_card,
-          shiny::tags$p(class = "hint-text", tr_span("mcmc.run_hint", lang()))
+          preview_card
         ))
       }
 
@@ -366,7 +353,7 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
         class = "card-block",
         shiny::tags$div(
           class = "card-head",
-          shiny::tags$h2(class = "card-title", tr_span("mcmc.summary", lang())),
+          shiny::tags$h3(class = "card-title", tr_span("mcmc.summary", lang())),
           download_button(ns("download_csv"), "common.download_csv", lang())
         ),
         DT::DTOutput(ns("summary_table")),
@@ -376,7 +363,7 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
         class = "card-block",
         shiny::tags$div(
           class = "card-head",
-          shiny::tags$h2(class = "card-title", tr_span("mcmc.diagnostics", lang()))
+          shiny::tags$h3(class = "card-title", tr_span("mcmc.diagnostics", lang()))
         ),
         diag_grid(list(
           list(label = tr("mcmc.rows_in", lang()), value = fmt_int(diag$rows_in)),
@@ -395,9 +382,8 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
       shiny::tagList(
         alert_from_warnings(res$warnings, lang()),
         summary_card,
-        run_diagnostics,
         preview_card,
-        shiny::tags$p(class = "note", tr("mcmc.summary_note", lang()))
+        run_diagnostics
       )
     })
 
@@ -409,11 +395,10 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
         df,
         rownames = FALSE,
         options = list(
-          dom = "t", paging = FALSE, scrollX = TRUE, scrollY = "280px",
-          language = list(emptyTable = tr("dt.empty", lang()),
-                          zeroRecords = tr("dt.no_records", lang()))
+          dom = "t", paging = FALSE, scrollX = TRUE, scrollY = "440px",
+          language = dt_language(lang())
         ),
-        class = "compact stripe"
+        class = "compact"
       )
     })
 
@@ -432,8 +417,7 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
       )
       opts <- list(
         dom = "ltp", pageLength = 10, scrollX = TRUE,
-        language = list(emptyTable = tr("dt.empty", lang()),
-                        zeroRecords = tr("dt.no_records", lang()))
+        language = dt_language(lang())
       )
       if (nrow(df) <= 10) {
         opts$dom <- "t"
@@ -443,7 +427,7 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
         df,
         rownames = FALSE,
         options = opts,
-        class = "compact stripe"
+        class = "compact"
       ) |>
         DT::formatRound(columns = 2:5, digits = 6)
     })

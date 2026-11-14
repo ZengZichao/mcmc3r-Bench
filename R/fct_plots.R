@@ -76,7 +76,7 @@ draw_calibration <- function(result, lang = "en", theme = "light",
                              export = FALSE, quantile_note = TRUE) {
   colors <- plot_colors(theme, export = export)
   set_plot_par(colors)
-  graphics::par(mar = c(5.0, 4.4, 2.8, if (show_density && show_cdf) 4.6 else 1.4))
+  graphics::par(mar = c(5.0, 4.4, 4.4, if (show_density && show_cdf) 5.2 else 1.4))
 
   x <- result$table$x
   y <- result$table$density
@@ -86,7 +86,16 @@ draw_calibration <- function(result, lang = "en", theme = "light",
   if (!is.finite(ymax) || ymax <= 0) ymax <- 1
 
   type_label <- tr(paste0("cal.type.", result$type), lang)
-  title <- tr("plot.title.calibration", lang)
+  title <- tr(
+    if (show_density && show_cdf) {
+      "plot.title.calibration_both"
+    } else if (show_cdf) {
+      "plot.title.calibration_cdf"
+    } else {
+      "plot.title.calibration_density"
+    },
+    lang
+  )
   xlab <- tr("plot.axis_time", lang)
 
   if (show_density && show_cdf) {
@@ -95,7 +104,7 @@ draw_calibration <- function(result, lang = "en", theme = "light",
       type = "n",
       xlab = xlab, ylab = tr("plot.axis_density", lang),
       ylim = c(0, ymax * 1.08), xaxs = "i", yaxs = "i",
-      main = title
+      main = ""
     )
     plot_grid_lines(colors)
     graphics::lines(x, y, col = colors$primary, lwd = 2.2)
@@ -105,38 +114,37 @@ draw_calibration <- function(result, lang = "en", theme = "light",
       axes = FALSE, xlab = "", ylab = "", ylim = c(0, 1),
       xaxs = "i", yaxs = "i"
     )
-    graphics::lines(x, cdf, col = colors$series[2], lwd = 2, lty = 2)
+    graphics::lines(x, cdf, col = colors$muted, lwd = 1.7, lty = 2)
     graphics::axis(4, col = colors$fg, col.axis = colors$fg, las = 1,
-                   cex.axis = 0.85)
-    graphics::mtext(tr("plot.axis_cdf", lang), side = 4, line = 2.6,
-                    col = colors$fg, cex = 0.85)
-    graphics::legend(
-      "topright", legend = c(tr("plot.legend_density", lang),
-                             tr("plot.legend_cdf", lang)),
-      col = c(colors$primary, colors$series[2]), lty = c(1, 2),
-      lwd = c(2.2, 2), bty = "n", cex = 0.82, text.col = colors$fg
-    )
+                   cex.axis = 0.78)
+    graphics::mtext(tr("plot.axis_cdf", lang), side = 4, line = 1.5,
+                    las = 0, col = colors$muted, cex = 0.78)
   } else if (show_cdf) {
     graphics::plot(
       x, cdf,
       type = "n",
       xlab = xlab, ylab = tr("plot.axis_cdf", lang),
       ylim = c(0, 1), xaxs = "i", yaxs = "i",
-      main = title
+      main = ""
     )
     plot_grid_lines(colors)
-    graphics::lines(x, cdf, col = colors$series[2], lwd = 2.2, lty = 2)
+    graphics::lines(x, cdf, col = colors$primary, lwd = 2.2)
   } else {
     graphics::plot(
       x, y,
       type = "n",
       xlab = xlab, ylab = tr("plot.axis_density", lang),
       ylim = c(0, ymax * 1.08), xaxs = "i", yaxs = "i",
-      main = title
+      main = ""
     )
     plot_grid_lines(colors)
     graphics::lines(x, y, col = colors$primary, lwd = 2.2)
   }
+
+  # The title owns the top row: quantile labels sit below it, so a narrow plot
+  # never lets "50%" run into the heading.
+  graphics::mtext(title, side = 3, line = 3.2, cex = 1.05, col = colors$fg,
+                  font = graphics::par("font.main"), xpd = NA)
 
   if (isTRUE(quantile_note) && nrow(result$quantiles)) {
     probs <- result$quantiles$probability
@@ -152,7 +160,7 @@ draw_calibration <- function(result, lang = "en", theme = "light",
     # when they alternate rows. Measure each label and push neighbours apart.
     xlim <- graphics::par("usr")[1:2]
     half <- vapply(labels, function(lab)
-      graphics::strwidth(lab, cex = 0.62, units = "user") / 2, numeric(1))
+      graphics::strwidth(lab, cex = 0.8, units = "user") / 2, numeric(1))
     gap <- half[1] * 0.25 + diff(xlim) * 0.002
     placed <- sort.int(qs, index.return = TRUE)$x
     order <- order(qs)
@@ -170,18 +178,27 @@ draw_calibration <- function(result, lang = "en", theme = "light",
     }
     placed <- pmin(pmax(placed, xlim[1] + half[order]), xlim[2] - half[order])
     # Anchor labels to their own line unless nudging would run out of plot.
+    # Neighbours that would touch move up one text row instead of overlapping.
+    rows <- rep(1L, length(placed))
+    if (length(placed) > 1) {
+      for (k in seq_along(placed)[-1]) {
+        need <- half[order[k - 1]] + half[order[k]] + gap * 2
+        if (placed[k] - placed[k - 1] < need) rows[k] <- 2L
+      }
+    }
     for (k in seq_along(placed)) {
       i <- order[k]
       at <- if (abs(placed[k] - qs[i]) <= half[i] * 2.5) placed[k] else qs[i]
       graphics::mtext(
         labels[i], side = 3, at = at,
-        line = -1.3 - ((i - 1) %% 2) * 1.15, cex = 0.62, col = colors$accent
+        line = if (rows[k] == 2L) 1.4 else 0.35, cex = 0.8,
+        col = colors$accent, xpd = NA
       )
     }
   }
   graphics::mtext(
     cal_parameter_note(result, lang), side = 1, line = 3.9,
-    cex = 0.7, col = colors$muted
+    cex = 0.8, col = colors$muted
   )
   invisible(colors)
 }
@@ -225,9 +242,9 @@ draw_marginal <- function(result, lang = "en", theme = "light",
   graphics::mtext(
     paste0(
       tr(ml_method_label_key(result$method), lang),
-      if (nzchar(result$model_name)) paste0(" \u00b7 ", result$model_name) else ""
+      if (nzchar(result$model_name)) paste0(" \u2014 ", result$model_name) else ""
     ),
-    side = 1, line = 3.9, cex = 0.7, col = colors$muted
+    side = 1, line = 3.9, cex = 0.8, col = colors$muted
   )
   invisible(colors)
 }

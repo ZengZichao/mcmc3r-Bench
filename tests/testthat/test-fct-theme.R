@@ -25,7 +25,7 @@ test_that("theme tokens are semantic and distinct", {
 test_that("plot colours follow the selected theme", {
   light <- plot_colors("light")
   dark <- plot_colors("dark")
-  expect_identical(light$bg, "#FFFFFF")
-  expect_identical(dark$bg, "#000000")
+  expect_identical(light$bg, theme_tokens("light")$bg)
+  expect_identical(dark$bg, theme_tokens("dark")$bg)
   expect_identical(light$primary, theme_tokens("light")$primary)
 })

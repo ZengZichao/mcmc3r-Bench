@@ -148,13 +148,6 @@ lang_from_query <- function(query) {
   normalize_lang(value)
 }
 
-theme_choices <- function(lang = "en") {
-  c(
-    stats::setNames("light", tr("theme.light", lang)),
-    stats::setNames("dark", tr("theme.dark", lang))
-  )
-}
-
 export_theme_choices <- function(lang = "en") {
   c(
     stats::setNames("print", tr("theme.print", lang)),

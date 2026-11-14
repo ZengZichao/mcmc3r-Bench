@@ -9,7 +9,7 @@
 [![docs](https://img.shields.io/badge/docs-EN%20%7C%20ZH-0066CC)](docs/README.md)
 [![在线演示](https://img.shields.io/badge/live%20demo-Connect%20Cloud-0066CC)](https://zengzichao-mcmc3r-bench.share.connect.posit.cloud/)
 
-mcmc3r 实验台把 `mcmc3r` 的三类工作流封装为网页界面：
+mcmc3r Bench把 `mcmc3r` 的三类工作流封装为网页界面：
 
 - **校准分布探索**：L/B/U 密度、累积概率、分位数、MCMCtree 语法、PNG/PDF/CSV 导出。
 - **MCMC 汇总**：MCMCtree `t_` 与 BPP `tau_` 输出、缺失值处理、CSV 导出。
@@ -119,7 +119,7 @@ ORCID [0000-0001-6553-970X](https://orcid.org/0000-0001-6553-970X)，
 GitHub [@ZengZichao](https://github.com/ZengZichao)。
 
 基于 Mario dos Reis、Sandra Alvarez-Carretero 及贡献者开发的 `mcmc3r`（MIT）。
-mcmc3r 实验台是独立、非官方图形界面，与 `mcmc3r` 作者、MCMCtree、BPP 无隶属或
+mcmc3r Bench是独立、非官方图形界面，与 `mcmc3r` 作者、MCMCtree、BPP 无隶属或
 背书关系。上游作者未参与本图形界面的设计、实现或部署。
 
 ## 许可

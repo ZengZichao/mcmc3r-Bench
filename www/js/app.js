@@ -7,18 +7,6 @@
   var current = { theme: initial.theme === "dark" ? "dark" : "light",
                   lang: initial.lang === "zh" ? "zh" : "en" };
   var validPages = ["calibration", "mcmc", "marginal", "help", "about"];
-  var reducedMotionQuery = window.matchMedia &&
-    window.matchMedia("(prefers-reduced-motion: reduce)");
-  var reducedMotion = !!(reducedMotionQuery && reducedMotionQuery.matches);
-  if (reducedMotionQuery) {
-    var trackMotion = function (mq) { reducedMotion = mq.matches; };
-    if (typeof reducedMotionQuery.addEventListener === "function") {
-      reducedMotionQuery.addEventListener("change", trackMotion);
-    } else if (typeof reducedMotionQuery.addListener === "function") {
-      reducedMotionQuery.addListener(trackMotion);
-    }
-  }
-
   function dict(lang) {
     return I18N[lang] || I18N.en || {};
   }
@@ -86,11 +74,6 @@
       btn.classList.toggle("active", active);
       btn.setAttribute("aria-pressed", active ? "true" : "false");
     });
-    var crumb = document.getElementById("sub-nav-current");
-    if (crumb) {
-      var shown = document.querySelector(".page-section:not([hidden])");
-      if (shown) crumb.textContent = t("nav." + shown.getAttribute("data-page"));
-    }
     updateThemeUI();
     updateMenuUI();
     localizeFileInputs();
@@ -125,12 +108,6 @@
     var dark = current.theme === "dark";
     var btn = document.getElementById("theme-toggle");
     if (!btn) return;
-    var label = btn.querySelector(".theme-label");
-    var key = dark ? "theme.light" : "theme.dark";
-    if (label) {
-      label.setAttribute("data-i18n", key);
-      label.textContent = t(key, current.lang);
-    }
     btn.setAttribute("aria-label",
       t(dark ? "theme.switch_to_light" : "theme.switch_to_dark", current.lang));
     btn.setAttribute("aria-pressed", dark ? "true" : "false");
@@ -141,7 +118,7 @@
     document.documentElement.setAttribute("data-bs-theme", current.theme);
     document.documentElement.dataset.theme = current.theme;
     var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", current.theme === "dark" ? "#000000" : "#F5F5F7");
+    if (meta) meta.setAttribute("content", current.theme === "dark" ? "#111111" : "#FCFCFC");
     if (persist !== false) {
       try { localStorage.setItem("mcmc3r-bench-theme", current.theme); } catch (e) {}
     }
@@ -205,12 +182,8 @@
     sendInput("active_tab", page);
     var live = document.getElementById("page-live");
     if (live) live.textContent = t("nav." + page, current.lang);
-    var crumb = document.getElementById("sub-nav-current");
-    if (crumb) crumb.textContent = t("nav." + page, current.lang);
     if (options.scroll !== false) {
-      try {
-        window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
-      } catch (e) { window.scrollTo(0, 0); }
+      window.scrollTo(0, 0);
     }
     if (options.focus !== false) {
       var activeSection = document.querySelector(".page-section:not([hidden])");
@@ -224,10 +197,11 @@
     scheduleRefresh();
   }
 
-  var TOAST_ICONS = {
-    error: ["\u26a0", "toast.error"],
-    warn: ["\u25b2", "toast.warn"],
-    "": ["\u2713", "toast.info"]
+  // Only failures and warnings need a word; a neutral toast is already the
+  // page speaking, so "Notice:" would be noise in front of every success.
+  var TOAST_LABELS = {
+    error: "toast.error",
+    warn: "toast.warn"
   };
 
   function dismissToast(toast) {
@@ -243,10 +217,10 @@
     toast.className = "app-toast" + (kind ? " toast-" + kind : "");
     toast.setAttribute("role", kind ? "alert" : "status");
 
-    // The 6px dot alone is colour-only status; add a glyph and a word.
+    // The dot alone is colour-only status; failures also carry a word.
     var label = document.createElement("span");
     label.className = "app-toast-label";
-    label.textContent = t(TOAST_ICONS[kind][1]) + ": " + message;
+    label.textContent = kind ? t(TOAST_LABELS[kind]) + ": " + message : message;
     toast.appendChild(label);
 
     var close = document.createElement("button");
@@ -350,6 +324,12 @@
       }
       hint.classList.toggle("is-visible", overflow);
     });
+    document.querySelectorAll(".table-scroll").forEach(function (box) {
+      var note = box.nextElementSibling;
+      if (!note || !note.classList.contains("table-scroll-note")) return;
+      note.classList.toggle("is-visible",
+        box.scrollWidth > box.clientWidth + 1);
+    });
     document.querySelectorAll(".table-scroll-hint").forEach(function (hint) {
       var prev = hint.previousElementSibling;
       if (!prev || !prev.classList.contains("dataTables_wrapper")) hint.remove();
@@ -411,13 +391,11 @@
     if (langBtn) {
       event.preventDefault();
       setLang(langBtn.getAttribute("data-lang"));
-      showToast(t("toast.lang_changed"));
       return;
     }
     if (event.target.closest("#theme-toggle")) {
       event.preventDefault();
       setTheme(current.theme === "dark" ? "light" : "dark");
-      showToast(t("toast.theme_changed"));
       return;
     }
     if (event.target.closest("#nav-toggle")) {

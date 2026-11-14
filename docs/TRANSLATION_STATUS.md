@@ -21,7 +21,7 @@ mentioned in release notes. `missing` blocks a release.
 | Deployment | `docs/en/DEPLOYMENT.md` | `docs/zh/DEPLOYMENT.md` | current | 1.0 | 0.1.0 |
 | Testing | `docs/en/TESTING.md` | `docs/zh/TESTING.md` | current | 1.0 | 0.1.0 |
 | i18n | `docs/en/I18N.md` | `docs/zh/I18N.md` | current | 1.0 | 0.1.0 |
-| Theme | `docs/en/THEME.md` | `docs/zh/THEME.md` | current | 1.1 | 0.1.0 |
+| Theme | `docs/en/THEME.md` | `docs/zh/THEME.md` | current | 2.1 | 0.1.0 |
 | Citation | `docs/en/CITATION.md` | `docs/zh/CITATION.md` | current | 1.0 | 0.1.0 |
 | Attribution | `docs/en/ATTRIBUTION.md` | `docs/zh/ATTRIBUTION.md` | current | 1.0 | 0.1.0 |
 | In-app help | `i18n/help_en.md` | `i18n/help_zh.md` | current | 1.0 | 0.1.0 |
@@ -37,6 +37,7 @@ mentioned in release notes. `missing` blocks a release.
 |---|---|---|---|
 | 2026-10-24 | All pairs above | Maintainer | current |
 | 2026-10-25 | Theme pair; Apple-inspired redesign | Maintainer | current |
+| 2026-11-14 | Theme pair, UI copy and in-app help; Wired editorial redesign, Radix step roles, one prose measure | Maintainer | current |
 
 ## How to update / 如何更新
 

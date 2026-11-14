@@ -1,18 +1,18 @@
-## Help and documentation
+## Overview
 
-mcmc3r Bench is an independent, unofficial GUI for the **mcmc3r** R package. It wraps three workflows: calibration-density exploration, MCMC output summaries, and marginal-likelihood estimation. Calculations are performed by `mcmc3r` on the server; the GUI adds validation, bilingual text, themes, and reproducible exports.
+mcmc3r Bench is an independent, unofficial GUI for the **mcmc3r** R package, which performs all calculations. It covers three workflows: calibration-density exploration, MCMC output summaries, and marginal-likelihood estimation.
 
 ## Quick start
 
 1. Choose a module in the top navigation.
-2. Provide parameters or upload a file. Example data are available for each data module.
-3. Press **Run**, inspect the result, then download CSV, PNG, PDF, or a ZIP bundle.
+2. Set parameters, upload a file, or load an example.
+3. Run the module, inspect the result, then download CSV, PNG, PDF, or a ZIP bundle.
 
-The app is public and hosted on Posit Connect Cloud. The Free plan serves public content with a 1 GiB bundle limit; compute and usage limits follow the account plan, and usage credits are currently reported but not enforced. The app may cold-start slowly after a period of inactivity. Do not upload confidential, personal, or regulated data; run the source code locally for sensitive work.
+For sensitive data, run the source code locally.
 
 ## Calibration Explorer
 
-The Calibration Explorer evaluates the calibration densities used by MCMCtree:
+This module evaluates the calibration densities used by MCMCtree:
 
 - **L (minimum bound)**: a truncated Cauchy distribution above `tL`.
 - **B (joint bounds)**: lower and upper soft bounds between `tL` and `tU`.
@@ -36,14 +36,14 @@ The density and CDF are computed with `mcmc3r::dL`, `dB`, `dU`, `pL`, `pB`, and 
 
 ## MCMC Summary
 
-Upload an `mcmc.txt` file produced by MCMCtree or BPP. The separator is auto-detected by default; choose whitespace, tab, or comma if a file is parsed incorrectly. The column preview can be hidden for wide tables. The app detects time columns with a strict prefix:
+Upload an `mcmc.txt` file produced by MCMCtree or BPP. The separator is auto-detected by default; choose whitespace, tab, or comma if a file is parsed incorrectly. The app detects time columns with a strict prefix:
 
 - MCMCtree: `t_`
 - BPP: `tau_`
 
 Only columns whose names start with the prefix are summarised. This avoids accidental matches such as `theta_` or `mu_t_`. Rows containing `NA`, `NaN`, or infinite values in any selected time column are removed and reported. The summary reports the mean, median, 2.5% and 97.5% quantiles, and the number of samples for each parameter.
 
-The calculation is equivalent to `mcmc3r::mcmc.sum` for multi-column inputs, but it also handles the single-column, missing-value, and no-time-column cases that make the upstream helper fail or return an empty table. Parameter names are kept exactly as they appear in the file.
+For multi-column input the result matches `mcmc3r::mcmc.sum`; single-column, missing-value, and no-time-column inputs are also supported. Parameter names keep the spelling used in the file.
 
 ## Marginal Likelihood
 

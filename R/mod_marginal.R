@@ -24,7 +24,7 @@ ml_beta_source_choices <- function(lang = "en") {
 mod_marginal_ui <- function(id, lang = "en") {
   ns <- shiny::NS(id)
   shiny::tagList(
-    page_header("ml.title", "ml.description", lang),
+    page_header("ml.title", lang),
     shiny::tags$div(
       class = "workbench-grid",
       control_panel(
@@ -41,14 +41,6 @@ mod_marginal_ui <- function(id, lang = "en") {
           choices = ml_method_choices(lang),
           selected = "step-stones",
           width = "100%"
-        ),
-        shiny::conditionalPanel(
-          condition = sprintf("input['%s'] == 'step-stones'", ns("method")),
-          shiny::tags$p(class = "field-note", tr_span("ml.method_ss_help", lang))
-        ),
-        shiny::conditionalPanel(
-          condition = sprintf("input['%s'] == 'gauss-quad'", ns("method")),
-          shiny::tags$p(class = "field-note", tr_span("ml.method_gq_help", lang))
         ),
         shiny::textInput(
           ns("model_name"),
@@ -74,20 +66,29 @@ mod_marginal_ui <- function(id, lang = "en") {
             placeholder = tr("common.no_file", lang),
             width = "100%"
           ),
-          shiny::tags$p(class = "field-note", tr_span("ml.zip_structure_help", lang))
+          shiny::tags$p(class = "field-note", tr_span("ml.zip_structure_help", lang)),
+          shiny::tags$div(
+            class = "button-row",
+            shiny::actionButton(
+              ns("demo"),
+              label = shiny::tagList(shiny::HTML(icon_svg("chart", 16)),
+                                     tr_span("ml.demo", lang)),
+              class = "btn btn-sm btn-utility"
+            )
+          ),
+          shiny::tags$p(class = "field-note", tr_span("ml.example_zip_note", lang))
         ),
         shiny::conditionalPanel(
           condition = sprintf("input['%s'] == 'files'", ns("chain_source")),
           shiny::fileInput(
             ns("files"),
-            label = field_label("ml.upload_files", lang),
+            label = field_label("ml.upload_files", lang, "ml.chain_selection_note"),
             accept = c(".txt", ".tsv", ".csv"),
             multiple = TRUE,
             buttonLabel = tr("common.browse", lang),
             placeholder = tr("common.no_file", lang),
             width = "100%"
           ),
-          shiny::tags$p(class = "field-note", tr_span("ml.chain_selection_note", lang)),
           shiny::radioButtons(
             ns("beta_source"),
             label = field_label("ml.beta_source", lang),
@@ -139,25 +140,6 @@ mod_marginal_ui <- function(id, lang = "en") {
             download_button(ns("download_beta"), "ml.beta_download", lang)
           ),
           shiny::uiOutput(ns("beta_preview_area"))
-        ),
-        shiny::tags$div(
-          class = "example-block",
-          shiny::actionButton(
-            ns("demo"),
-            label = shiny::tagList(shiny::HTML(icon_svg("chart", 16)),
-                                   tr_span("ml.demo", lang)),
-            class = "btn btn-sm btn-utility"
-          ),
-          shiny::tags$p(class = "field-note", tr_span("ml.example_zip_note", lang))
-        ),
-        footer = shiny::tags$div(
-          shiny::tags$p(class = "panel-hint", tr_span("ml.run_hint", lang)),
-          shiny::tags$p(class = "panel-hint small",
-                        tr_span("ml.limits", lang,
-                           ss = LIMITS$beta_max_ss,
-                           gq = LIMITS$beta_max_gq,
-                           gauss = LIMITS$gauss_max,
-                           chains = LIMITS$chains_max))
         )
       ),
       result_panel(
@@ -430,10 +412,9 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
         rownames = FALSE,
         options = list(
           dom = "t", paging = FALSE, scrollY = "180px",
-          language = list(emptyTable = tr("dt.empty", lang()),
-                          zeroRecords = tr("dt.no_records", lang()))
+          language = dt_language(lang())
         ),
-        class = "compact stripe"
+        class = "compact"
       ) |>
         DT::formatSignif(columns = 1, digits = 8)
     })
@@ -455,7 +436,7 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
             class = "app-alert-body",
             shiny::tags$div(class = "app-alert-head",
                             shiny::tags$span(class = "app-alert-title",
-                                             tr("ml.demo", lang()))),
+                                             tr("ml.demo_alert_title", lang()))),
             shiny::tags$p(class = "app-alert-message",
                           tr("ml.demo_synthetic_note", lang()))
           )
@@ -534,23 +515,7 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
           class = "result-card",
           result_toolbar(
             lang = lang(),
-            shiny::tags$div(
-              class = "export-controls",
-              shiny::radioButtons(
-                ns("export_theme"),
-                label = tr_span("common.export_theme", lang()),
-                choices = export_theme_choices(lang()),
-                selected = "print",
-                inline = TRUE
-              ),
-              shiny::selectInput(
-                ns("dpi"),
-                label = tr_span("common.dpi", lang()),
-                choices = c("150" = 150, "300" = 300),
-                selected = 150,
-                width = "110px"
-              )
-            ),
+            export_options(ns, lang()),
             shiny::tags$div(
               class = "download-group",
               download_button(ns("download_summary"), "ml.summary_download", lang()),
@@ -562,31 +527,22 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
             )
           ),
           metrics,
-          section_card(
-            "ml.plot_title", lang(),
-            shiny::tags$div(
-              class = "plot-wrap",
-              `data-plot-alt` = tr("plot.alt.marginal", lang()),
-              shiny::plotOutput(ns("plot"), height = "340px")
-            )
+          shiny::tags$div(
+            class = "plot-wrap",
+            `data-plot-alt` = tr("plot.alt.marginal", lang()),
+            shiny::plotOutput(ns("plot"), height = "340px")
           ),
           section_card(
             "ml.detail_title", lang(),
             DT::DTOutput(ns("detail_table")),
             zero_note
           ),
-          shiny::tags$p(
+          shiny::tags$div(
             class = "note",
-            tr("ml.result_note", lang()), " ",
-            tr("ml.summary_note", lang())
-          ),
-          shiny::tags$p(
-            class = "note",
-            paste0(tr("ml.upstream", lang()), ": mcmc3r ", res$upstream_version,
-                   " (", substr(res$upstream_sha, 1, 7), ") \u00b7 ",
-                   tr("ml.app_label", lang()), " ", res$app_version)
-          ),
-          shiny::tags$p(class = "note", tr("ml.meta_note", lang()))
+            shiny::tags$p(tr("ml.summary_note", lang())),
+            shiny::tags$p(paste0("mcmc3r ", res$upstream_version, " (",
+                                 substr(res$upstream_sha, 1, 7), ")"))
+          )
         )
       )
     })
@@ -611,8 +567,7 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
       )
       opts <- list(
         dom = "ltp", pageLength = 8, scrollX = TRUE,
-        language = list(emptyTable = tr("dt.empty", lang()),
-                        zeroRecords = tr("dt.no_records", lang()))
+        language = dt_language(lang())
       )
       if (nrow(df) <= 8) {
         opts$dom <- "t"
@@ -622,7 +577,7 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
         df,
         rownames = FALSE,
         options = opts,
-        class = "compact stripe"
+        class = "compact"
       ) |>
         DT::formatSignif(columns = c(1, 2), digits = 6)
     })

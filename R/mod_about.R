@@ -8,8 +8,8 @@ external_link <- function(href, label) {
 
 about_card <- function(title_key, lang = "en", ...) {
   shiny::tags$section(
-    class = "card-block about-card",
-    shiny::tags$h2(class = "card-title", tr_span(title_key, lang)),
+    class = "about-card",
+    shiny::tags$h2(class = "about-card-title", tr_span(title_key, lang)),
     ...
   )
 }
@@ -25,7 +25,7 @@ about_row <- function(label_key, value, lang = "en") {
 mod_about_ui <- function(id, lang = "en") {
   ns <- shiny::NS(id)
   shiny::tagList(
-    page_header("about.title", "about.description", lang),
+    page_header("about.title", lang),
     shiny::uiOutput(ns("content"))
   )
 }
@@ -64,14 +64,12 @@ mod_about_server <- function(id, lang) {
 
       upstream <- about_card(
         "about.upstream", l,
-        shiny::tags$p(class = "about-lede", tr("about.built_on", l)),
-        about_row("about.upstream",
+        about_row("about.upstream_repo",
                   external_link(UPSTREAM_REPO, "dosreislab/mcmc3r"), l),
         about_row("about.upstream_authors", UPSTREAM_AUTHORS, l),
         about_row("about.upstream_version", UPSTREAM_VERSION, l),
         about_row("about.upstream_sha",
-                  shiny::tags$code(substr(UPSTREAM_SHA, 1, 7)), l),
-        shiny::tags$p(class = "note", tr("about.no_endorsement", l))
+                  shiny::tags$code(substr(UPSTREAM_SHA, 1, 7)), l)
       )
 
       licences <- about_card(
@@ -99,15 +97,6 @@ mod_about_server <- function(id, lang) {
                                 "CITATION.cff"), l)
       )
 
-      tech <- about_card(
-        "about.tech_heading", l,
-        about_row("about.framework", tr("about.framework_value", l), l),
-        about_row("about.upstream",
-                  paste0("mcmc3r ", UPSTREAM_VERSION, " @ ",
-                         substr(UPSTREAM_SHA, 1, 7)), l),
-        about_row("about.doc_version", paste0("v", DOC_VERSION), l)
-      )
-
       disclaimer <- about_card(
         "about.disclaimer_heading", l,
         shiny::tags$p(class = "note", tr("about.disclaimer", l)),
@@ -116,12 +105,8 @@ mod_about_server <- function(id, lang) {
 
       shiny::tags$div(
         class = "about-grid",
-        identity,
-        upstream,
-        licences,
-        citation,
-        tech,
-        disclaimer
+        shiny::tags$div(class = "about-column", identity, upstream),
+        shiny::tags$div(class = "about-column", citation, licences, disclaimer)
       )
     })
   })

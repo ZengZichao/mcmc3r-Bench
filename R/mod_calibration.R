@@ -33,7 +33,7 @@ parse_xmax <- function(text, module = "calibration") {
 mod_calibration_ui <- function(id, lang = "en") {
   ns <- shiny::NS(id)
   shiny::tagList(
-    page_header("cal.title", "cal.description", lang),
+    page_header("cal.title", lang),
     shiny::tags$div(
       class = "workbench-grid",
       control_panel(
@@ -138,8 +138,7 @@ mod_calibration_ui <- function(id, lang = "en") {
             value = "0.025, 0.5, 0.975",
             width = "100%"
           )
-        ),
-        footer = shiny::tags$p(class = "panel-hint", tr_span("cal.run_hint", lang))
+        )
       ),
       result_panel(
         title_key = "cal.results",
@@ -268,23 +267,7 @@ mod_calibration_server <- function(id, lang, theme, active, session_dir,
           class = "result-card",
           result_toolbar(
             lang = lang(),
-            shiny::tags$div(
-              class = "export-controls",
-              shiny::radioButtons(
-                ns("export_theme"),
-                label = tr_span("common.export_theme", lang()),
-                choices = export_theme_choices(lang()),
-                selected = "print",
-                inline = TRUE
-              ),
-              shiny::selectInput(
-                ns("dpi"),
-                label = tr_span("common.dpi", lang()),
-                choices = c("150" = 150, "300" = 300),
-                selected = 150,
-                width = "110px"
-              )
-            ),
+            export_options(ns, lang()),
             shiny::tags$div(
               class = "download-group",
               download_button(ns("download_csv"), "common.download_csv", lang()),
@@ -308,20 +291,18 @@ mod_calibration_server <- function(id, lang, theme, active, session_dir,
           ),
           section_card(
             "cal.data_title", lang(),
-            shiny::tags$p(class = "note", tr("cal.data_note", lang())),
             DT::DTOutput(ns("data_table")),
-            shiny::tags$p(
-              class = "note",
-              tr("cal.data_preview_note", lang(), n = min(nrow(res$table), 500))
-            )
-          ),
-          shiny::tags$p(
-            class = "note",
-            tr("cal.summary_note", lang()),
+            if (nrow(res$table) > 500) {
+              shiny::tags$p(
+                class = "note",
+                tr("cal.data_preview_note", lang(), n = 500, total = nrow(res$table))
+              )
+            },
             if (isTRUE(res$xmax_auto)) {
-              paste0(" ", tr("cal.xmax.auto", lang()), ": ", fmt_num(res$xmax), " Ma.")
-            } else {
-              NULL
+              shiny::tags$p(
+                class = "note",
+                tr("cal.xmax.auto_note", lang(), x = fmt_num(res$xmax))
+              )
             }
           )
         )
@@ -350,10 +331,9 @@ mod_calibration_server <- function(id, lang, theme, active, session_dir,
         rownames = FALSE,
         options = list(
           dom = "t", paging = FALSE, ordering = FALSE,
-          language = list(emptyTable = tr("dt.empty", lang()),
-                          zeroRecords = tr("dt.no_records", lang()))
+          language = dt_language(lang())
         ),
-        class = "compact stripe"
+        class = "compact"
       ) |>
         DT::formatSignif(columns = seq_len(ncol(df)), digits = 4)
     })
@@ -370,10 +350,9 @@ mod_calibration_server <- function(id, lang, theme, active, session_dir,
         rownames = FALSE,
         options = list(
           dom = "ltp", pageLength = 10, scrollX = TRUE,
-          language = list(emptyTable = tr("dt.empty", lang()),
-                          zeroRecords = tr("dt.no_records", lang()))
+          language = dt_language(lang())
         ),
-        class = "compact stripe"
+        class = "compact"
       ) |>
         DT::formatSignif(columns = seq_len(ncol(df)), digits = 4)
     })

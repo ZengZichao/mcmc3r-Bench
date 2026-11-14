@@ -26,7 +26,7 @@ theme_init_js <- function() {
     "  document.documentElement.lang = initialLang === 'zh' ? 'zh-CN' : 'en';",
     "  document.documentElement.dataset.lang = initialLang;",
     "  var meta = document.querySelector('meta[name=\"theme-color\"]');",
-    "  if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#F5F5F7');",
+    "  if (meta) meta.setAttribute('content', theme === 'dark' ? '#111111' : '#FCFCFC');",
     "  window.__MCMC3R_INITIAL = { theme: theme, lang: initialLang };",
     "})();",
     sep = "\n"
@@ -64,7 +64,6 @@ app_header <- function(lang = "en", theme = "light") {
       class = "app-header-inner",
       shiny::tags$a(
         class = "brand", href = "#calibration", `data-nav` = "calibration",
-        shiny::HTML(brand_svg()),
         shiny::tags$span(
           class = "brand-text",
           shiny::tags$span(class = "brand-name", tr_span("app.name", lang))
@@ -126,45 +125,6 @@ app_header <- function(lang = "en", theme = "light") {
   )
 }
 
-app_subnav <- function(lang = "en", page = "calibration") {
-  shiny::tags$nav(
-    class = "sub-nav",
-    `aria-label` = tr("nav.breadcrumb", lang),
-    `data-i18n-aria-label` = "nav.breadcrumb",
-    shiny::tags$div(
-      class = "sub-nav-inner",
-      shiny::tags$div(
-        class = "sub-nav-context",
-        shiny::tags$a(
-          class = "sub-nav-home", href = "#calibration", `data-nav` = "calibration",
-          tr_span("app.name", lang)
-        ),
-        shiny::tags$span(class = "sub-nav-sep", `aria-hidden` = "true", "\u203a"),
-        # The row is labelled a breadcrumb but used to repeat the brand name on
-        # all five pages; it now carries the current page, kept in step by
-        # showPage().
-        shiny::tags$span(
-          id = "sub-nav-current", class = "sub-nav-current",
-          `aria-current` = "page",
-          tr(paste0("nav.", page), lang)
-        )
-      ),
-      shiny::tags$div(
-        class = "sub-nav-links",
-        shiny::tags$a(
-          href = paste0(APP_REPO, "/tree/main/docs"),
-          target = "_blank", rel = "noopener noreferrer",
-          tr_span("footer.docs", lang)
-        ),
-        shiny::tags$a(
-          href = APP_REPO, target = "_blank", rel = "noopener noreferrer",
-          tr_span("footer.github", lang)
-        )
-      )
-    )
-  )
-}
-
 footer_link <- function(href, key, lang, external = FALSE, nav = NULL) {
   shiny::tags$a(
     href = href,
@@ -184,9 +144,7 @@ app_footer <- function(lang = "en") {
         class = "footer-top",
         shiny::tags$div(
           class = "footer-brand-block",
-          shiny::tags$span(class = "footer-brand", APP_NAME),
-          shiny::tags$p(class = "footer-tagline", tr_span("app.tagline", lang)),
-          shiny::tags$p(class = "footer-note", tr_span("about.no_endorsement", lang))
+          shiny::tags$span(class = "footer-brand", APP_NAME)
         ),
         shiny::tags$div(
           class = "footer-column",
@@ -237,11 +195,8 @@ app_footer <- function(lang = "en") {
         shiny::tags$div(
           class = "footer-meta",
           shiny::tags$span(tr("footer.copyright", lang)),
-          shiny::tags$span(class = "footer-sep", "\u00b7"),
           shiny::tags$span(class = "footer-version",
                            paste0("v", app_version())),
-          shiny::tags$span(class = "footer-sep", "\u00b7"),
-          shiny::tags$span(tr_span("footer.upstream", lang)),
           shiny::tags$span(paste0("mcmc3r ", UPSTREAM_VERSION))
         ),
         shiny::tags$a(
@@ -280,7 +235,7 @@ app_ui <- function(request) {
         content = "width=device-width, initial-scale=1, viewport-fit=cover"
       ),
       shiny::tags$meta(name = "theme-color",
-                       content = if (initial_theme == "dark") "#000000" else "#F5F5F7"),
+                       content = if (initial_theme == "dark") "#111111" else "#FCFCFC"),
       shiny::tags$meta(name = "mcmc3r-default-theme", content = default_theme),
       shiny::tags$meta(
         name = "description",
@@ -300,7 +255,6 @@ app_ui <- function(request) {
                       tr_span("common.noscript", initial_lang))
     ),
     app_header(initial_lang, initial_theme),
-    app_subnav(initial_lang),
     shiny::tags$main(
       id = "main", class = "app-main", tabindex = "-1",
       shiny::tags$div(

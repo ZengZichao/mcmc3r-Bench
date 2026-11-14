@@ -38,7 +38,7 @@ help_markdown <- function(text, lang = "en") {
 
   list(
     html = shiny::HTML(html),
-    toc = shiny::tags$ol(toc),
+    toc = shiny::tags$ol(class = "toc-list", toc),
     toc_label = tr("help.toc", lang)
   )
 }
@@ -46,7 +46,7 @@ help_markdown <- function(text, lang = "en") {
 mod_help_ui <- function(id, lang = "en") {
   ns <- shiny::NS(id)
   shiny::tagList(
-    page_header("help.title", "help.description", lang),
+    page_header("help.title", lang),
     shiny::uiOutput(ns("layout"))
   )
 }
@@ -72,7 +72,10 @@ mod_help_server <- function(id, lang) {
         ),
         shiny::tags$details(
           class = "help-toc-mobile",
-          shiny::tags$summary(rendered$toc_label),
+          shiny::tags$summary(
+            rendered$toc_label,
+            shiny::HTML(icon_svg("chevron", size = 14))
+          ),
           shiny::tags$nav(
             `aria-label` = rendered$toc_label,
             rendered$toc
