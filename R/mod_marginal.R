@@ -223,7 +223,7 @@ mod_marginal_server <- function(id, lang, theme, active, session_dir,
           state$generated_beta <- beta
           state$generated_method <- input$method
           state$error <- NULL
-          notify(session, 
+          notify(session,
             tr("ml.beta_generated_note", lang(),
                n = length(beta),
                method = tr(ml_method_label_key(input$method), lang())),

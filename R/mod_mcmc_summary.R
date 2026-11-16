@@ -206,7 +206,7 @@ mod_mcmc_summary_server <- function(id, lang, theme, active, session_dir,
                                         name = mcmc_example_label(name, lang())),
                    diagnostics = ex$diagnostics,
                    example = name)
-          notify(session, 
+          notify(session,
             tr("mcmc.example_loaded", lang(), name = mcmc_example_label(name, lang())),
             type = "message"
           )
